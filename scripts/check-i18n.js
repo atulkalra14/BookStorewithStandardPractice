@@ -73,7 +73,7 @@ function unescapeValue (s) {
 
 function parseProperties (file) {
   const map = new Map()
-  const text = fs.readFileSync(file, 'utf8').replace(/^﻿/, '')
+  const text = fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '')
   const lines = text.split(/\r?\n/)
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i].replace(/^\s+/, '')

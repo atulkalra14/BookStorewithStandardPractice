@@ -1,0 +1,45 @@
+{
+  "name": "BookStoreWithStandardPractices",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": "^24"
+  },
+  "dependencies": {
+    "@cap-js/hana": "^3",
+    "@sap/cds": "^10",
+    "@sap/cds-mtxs": "^4",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10",
+    "eslint": "^10",
+    "jest": "^30"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "lint": "eslint .",
+    "i18n:check": "node scripts/check-i18n.js --languages=en,de"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 20000,
+    "testPathIgnorePatterns": ["/node_modules/", "/gen/"]
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa",
+        "multitenancy": true
+      },
+      "[with-mtx]": {
+        "multitenancy": true
+      }
+    },
+    "profile": "with-mtx-sidecar"
+  }
+}
