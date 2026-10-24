@@ -40,6 +40,9 @@
             "alice": { "tenant": "t1", "roles": ["BookViewer"] },
             "bob": { "tenant": "t1", "roles": [] },
             "carol": { "tenant": "t2", "roles": ["BookViewer"] },
+            "dave": { "tenant": "t1", "roles": ["BookAdmin"] },
+            "erin": { "tenant": "t2", "roles": ["BookAdmin"] },
+            "frank": { "tenant": "t1", "roles": ["BookAdmin"] },
             "*": false
           }
         }

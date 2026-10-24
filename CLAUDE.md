@@ -55,7 +55,7 @@
 - Use aspects `cuid`, `managed`; use `localized` for translatable texts; keep i18n in `_i18n/`.
 - Use compositions for child lifecycle ownership, associations for references.
 - Handlers: `before` = validate/enrich, `on` = replace core logic, `after` = post-process. Keep handlers thin; move logic to `srv/lib/`.
-- Drafts: if `@odata.draft.enabled`, test draft create, edit, activate and cancel flows.
+- Drafts: enable `@odata.draft.enabled` by default on every new editable entity in its service projection. Skip it for `@readonly` entities, code lists, value-help entities and entities users never edit, and say why in the plan. If enabled, test draft create, edit, activate and cancel flows, plus draft ownership between two users of the same tenant.
 - Async/external calls: use outbox for events and remote calls that must not be lost.
 - Config per profile in `package.json` `cds` section (`[development]`, `[production]`); secrets only via env/BTP bindings.
 - Keep changes small: one feature slice per task (entity, service, handler, test, annotation).
