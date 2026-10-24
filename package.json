@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@cap-js/sqlite": "^3",
+    "@cap-js/cds-test": "^1",
     "@sap/cds-dk": "^10",
     "eslint": "^10",
     "jest": "^30"
@@ -32,6 +33,17 @@
   "private": true,
   "cds": {
     "requires": {
+      "auth": {
+        "[development]": {
+          "kind": "mocked",
+          "users": {
+            "alice": { "tenant": "t1", "roles": ["BookViewer"] },
+            "bob": { "tenant": "t1", "roles": [] },
+            "carol": { "tenant": "t2", "roles": ["BookViewer"] },
+            "*": false
+          }
+        }
+      },
       "[production]": {
         "auth": "xsuaa",
         "multitenancy": true

@@ -6,9 +6,19 @@
       "grant-as-authority-to-apps": [
         "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
       ]
+    },
+    {
+      "name": "$XSAPPNAME.BookViewer",
+      "description": "Read the book catalog"
     }
   ],
   "attributes": [],
-  "role-templates": [],
+  "role-templates": [
+    {
+      "name": "BookViewer",
+      "description": "Read the book catalog",
+      "scope-references": ["$XSAPPNAME.BookViewer"]
+    }
+  ],
   "authorities-inheritance": false
 }
