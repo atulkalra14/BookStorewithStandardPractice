@@ -25,7 +25,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "lint": "eslint .",
     "i18n:check": "node scripts/check-i18n.js --languages=en,de",
-    "watch-book-shop": "cds watch --open \"com.bookstore.bookshop/index.html?sap-ui-xx-viewCache=false\" --livereload false"
+    "watch-book-shop": "cds watch --open \"com.bookstore.bookshop/index.html?sap-ui-xx-viewCache=false\" --livereload false",
+    "watch-landing": "cds watch --open \"com.bookstore.landing/index.html?sap-ui-xx-viewCache=false\" --livereload false"
   },
   "jest": {
     "testEnvironment": "node",
@@ -112,6 +113,7 @@
     "app/*"
   ],
   "sapux": [
-    "app/book-shop"
+    "app/book-shop",
+    "app/landing"
   ]
 }

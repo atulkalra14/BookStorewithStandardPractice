@@ -1,0 +1,16 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+    <Dialog id="registerDialog" title="{regI18n>registerDialogTitle}" contentWidth="24rem" draggable="true">
+        <f:SimpleForm id="registerForm" editable="true" layout="ResponsiveGridLayout">
+            <Label id="registerNameLabel" text="{regI18n>registerName}" labelFor="registerName" required="true" />
+            <Input id="registerName" maxLength="111" />
+            <Label id="registerEmailLabel" text="{regI18n>registerEmail}" labelFor="registerEmail" required="true" />
+            <Input id="registerEmail" type="Email" maxLength="255" />
+        </f:SimpleForm>
+        <beginButton>
+            <Button id="registerSubmitButton" text="{regI18n>registerSubmit}" type="Emphasized" press=".onSubmitRegistration" />
+        </beginButton>
+        <endButton>
+            <Button id="registerCancelButton" text="{regI18n>registerCancel}" press=".onCancelRegistration" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

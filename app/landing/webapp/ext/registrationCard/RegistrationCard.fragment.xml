@@ -1,0 +1,6 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <VBox id="registerCardBox" class="sapUiSmallMargin">
+        <Text id="registerCardIntro" text="{regI18n>registerCardIntro}" class="sapUiSmallMarginBottom" />
+        <Button id="registerOpenButton" text="{regI18n>registerButton}" type="Emphasized" press=".onOpenRegistration" />
+    </VBox>
+</core:FragmentDefinition>
