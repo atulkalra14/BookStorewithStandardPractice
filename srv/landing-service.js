@@ -1,6 +1,6 @@
 import cds from '@sap/cds'
 import { restrictToNewArrivals, restrictToActiveDiscounts, selectDiscountInputs, addDiscountedPrice } from './lib/landing.js'
-import { bestSellers } from './lib/orders.js'
+import { bestSellers, addBestSellerDescriptions } from './lib/orders.js'
 
 export default class LandingService extends cds.ApplicationService {
   init () {
@@ -10,6 +10,7 @@ export default class LandingService extends cds.ApplicationService {
     this.before('READ', ActiveDiscounts, selectDiscountInputs)
     this.after('READ', ActiveDiscounts, addDiscountedPrice)
     this.on('READ', BestSellers, bestSellers)
+    this.after('READ', BestSellers, addBestSellerDescriptions)
     return super.init()
   }
 }

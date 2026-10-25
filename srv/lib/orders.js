@@ -200,3 +200,13 @@ export async function bestSellers (req) {
   if (limit) query.SELECT.limit = limit
   return query
 }
+
+// after READ on BestSellers: the description comes from the localized Books view, so it follows the request language.
+export async function addBestSellerDescriptions (rows) {
+  const list = Array.isArray(rows) ? rows : rows ? [rows] : []
+  const ids = list.map(r => r.ID).filter(Boolean)
+  if (!ids.length) return
+  const books = await SELECT.from('localized.bookstore.Books').columns('ID', 'descr').where({ ID: { in: ids } })
+  const byId = new Map(books.map(b => [b.ID, b.descr]))
+  for (const row of list) if (row.ID) row.descr = byId.get(row.ID) ?? null
+}

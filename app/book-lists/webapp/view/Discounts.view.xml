@@ -1,0 +1,36 @@
+<mvc:View
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    core:require="{Currency: 'sap/ui/model/type/Currency', formatMessage: 'sap/base/strings/formatMessage'}"
+    controllerName="com.bookstore.booklists.view.BookList">
+    <Page title="{i18n>discountsTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <subHeader>
+            <Toolbar>
+                <Text text="{i18n>discountsSubtitle}" />
+            </Toolbar>
+        </subHeader>
+        <List
+            id="bookList"
+            class="booklistsList"
+            showSeparators="None"
+            noDataText="{i18n>noDiscounts}"
+            items="{path: '/ActiveDiscounts', sorter: {path: 'percent', descending: true}}">
+            <CustomListItem class="booklistsCard">
+                <HBox class="sapUiSmallMargin">
+                    <Image src="{bookImageUrl}" alt="{bookTitle}" class="booklistsCover sapUiSmallMarginEnd" width="6rem" height="9rem" densityAware="false" visible="{= !!${bookImageUrl}}" />
+                    <VBox>
+                        <Title text="{bookTitle}" titleStyle="H3" />
+                        <Text class="sapUiTinyMarginTopBottom" text="{bookDescr}" />
+                        <HBox alignItems="Center" wrap="Wrap">
+                            <Text class="booklistsOldPrice sapUiTinyMarginEnd" tooltip="{i18n>originalPrice}" text="{parts: [{path: 'bookPrice'}, {path: 'currency'}], type: 'Currency', formatOptions: {currencyCode: false}}" />
+                            <ObjectNumber class="sapUiTinyMarginEnd" emphasized="true" state="Success" tooltip="{i18n>discountedPrice}" number="{parts: [{path: 'discountedPrice'}, {path: 'currency'}], type: 'Currency', formatOptions: {currencyCode: false}}" />
+                            <ObjectStatus state="Success" inverted="true" text="{= '-' + ${percent} + '%'}" />
+                        </HBox>
+                        <Text class="sapUiTinyMarginTop" text="{= formatMessage(${i18n>validUntil}, [${validTo}])}" />
+                    </VBox>
+                </HBox>
+            </CustomListItem>
+        </List>
+    </Page>
+</mvc:View>

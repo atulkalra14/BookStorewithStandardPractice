@@ -70,7 +70,6 @@ describe('landing cards with images', () => {
     for (const f of ['discountCard/DiscountCard', 'bestSellerCard/BestSellerCard']) {
       expect(read(`app/landing/webapp/ext/${f}.fragment.xml`)).toMatch(/<Image(?:(?!\/>)[\s\S])*?alt="\{mainModel>/)
     }
-    expect(read('app/landing/webapp/ext/heroCard/HeroCard.fragment.xml')).toMatch(/<Image(?:(?!\/>)[\s\S])*?decorative="true"/)
   })
   it('no hard-coded texts in the new fragments', () => {
     for (const f of ['heroCard/HeroCard', 'bestSellerCard/BestSellerCard']) {

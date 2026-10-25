@@ -119,6 +119,7 @@
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.heroCard",
         "settings": {
+          "targetUri": "../../com.bookstore.landing/website/index.html",
           "title": "{{heroTitle}}",
           "entitySet": "StoreInfo",
           "defaultSpan": {
@@ -177,6 +178,7 @@
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.storeInfoCard",
         "settings": {
+          "targetUri": "../../com.bookstore.landing/website/about.html",
           "title": "{{storeInfoTitle}}",
           "subTitle": "{{storeInfoSubtitle}}",
           "entitySet": "StoreInfo",
@@ -190,6 +192,7 @@
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.discountCard",
         "settings": {
+          "targetUri": "../../com.bookstore.booklists/index.html#/discounts",
           "title": "{{discountsTitle}}",
           "subTitle": "{{discountsSubtitle}}",
           "entitySet": "ActiveDiscounts"
@@ -199,6 +202,7 @@
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.newArrivalsCard",
         "settings": {
+          "targetUri": "../../com.bookstore.booklists/index.html#/new-arrivals",
           "title": "{{newArrivalsTitle}}",
           "subTitle": "{{newArrivalsSubtitle}}",
           "entitySet": "NewArrivals"
@@ -208,6 +212,7 @@
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.bestSellerCard",
         "settings": {
+          "targetUri": "../../com.bookstore.booklists/index.html#/best-sellers",
           "title": "{{bestSellersTitle}}",
           "subTitle": "{{bestSellersSubtitle}}",
           "entitySet": "BestSellers"
