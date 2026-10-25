@@ -6,7 +6,7 @@
 |---|---|---|
 | Catalog | `db/schema/catalog.cds` | Slice 1: Authors, Books (read-only API); slice 2: draft-enabled Books admin API; slice 3: customer Fiori list report and object page `app/book-shop` on `CatalogService` |
 | Customers | `db/schema/customers.cds` | Slice 4: Customers (personal data), own-profile `CustomerService`, read-only admin view |
-| Orders | `db/schema/orders.cds` | Slice 6: Orders (draft = cart), OrderItems, own-orders `OrderService`, Fiori app `app/orders` |
+| Orders | `db/schema/orders.cds` | Slice 6: Orders (draft = cart), OrderItems, own-orders `OrderService`, Fiori app `app/orders`; slice 7: read-only `PurchaseHistoryService`, Fiori app `app/purchase-history` |
 | Landing | `db/schema/landing.cds` | Slice 5: Discounts, StoreInfo, read-only `LandingService`, Overview Page `app/landing` |
 
 ## Glossary
@@ -40,7 +40,8 @@
 - `Orders` (`cuid`, `managed`): `orderNumber` (`ORD-<year>-<6 digits>`, next number of the year per tenant), `customer`, `status` (`Placed`, `Cancelled`), `totalAmount`, `currency` (fixed `EUR`), `placedAt` and the mandatory ship-to fields. All but the ship-to fields are read-only and set by the handler. `OrderItems` (composition): `book`, `quantity` (1 to 99, checked in the handler for a translated message), `unitPrice` (price snapshot from `Books`, never from the client), `lineTotal`.
 - `OrderService` (`/odata/v4/order`): requires `Customer`; rows only where `customer.userId = $user`. `Orders` is draft-enabled and the draft is the cart: total is recalculated on every item change. Activating the draft places the order (`before SAVE`): validation (`ERR_ORDER_EMPTY`, `_DUPLICATE_BOOK`, `_QUANTITY_INVALID`, `_INSUFFICIENT_STOCK`), price snapshot, conditional stock decrement, order number. Placed orders are immutable (`ERR_ORDER_NOT_EDITABLE`, `ERR_ORDER_NOT_DELETABLE`). Bound action `cancel` (only `Placed`, enabled by `@Core.OperationAvailable`) restores stock; another customer's order gives 404. A first-time customer gets a `Customers` row on the first cart (name and email from token claims, else the user ID); this write uses the db service without authorization, limited to the caller's own `userId`.
 - `LandingService.BestSellers` now sums quantities of `Placed` orders (cancelled orders and drafts do not count); it is readable by every logged-in user and exposes only totals per book.
-- The landing quick links Order Books and View Your Purchase History open `app/orders`.
+- The landing quick link Order Books opens `app/orders`; View Your Purchase History opens `app/purchase-history`.
+- `PurchaseHistoryService` (`/odata/v4/purchase-history`, slice 7): requires `Customer`; `Orders` is a `@readonly` projection, READ only where `ownerId = $user`, no handler. `ownerId` is `customer.userId`, projected only so the rule can use it (exposing the `customer` association would auto-expose `Customers`); it is the caller's own ID, hidden in the UI. Not draft-enabled (read-only), so carts are never listed; placed and cancelled orders are. List report only (no object page, no items); Only `orderNumber`, `placedAt`, `status`, `totalAmount` and `currency` are exposed (no ship-to data, no navigation properties). BookAdmin has no access. Relies on `Customers.userId` being unique per tenant and immutable. Verified on SQLite only: run against HANA before release.
 - Deferred: payment, shipping methods and costs, promo codes, tax, confirmation emails (outbox), returns, admin order management and fulfilment statuses, translated status texts (status codes show as stored), currency per book, order number sequence under heavy concurrency (relies on the unique constraint), real cross-tenant test (needs the sidecar).
 
 ## Roles

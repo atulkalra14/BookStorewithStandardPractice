@@ -4,3 +4,4 @@ using from './admin-service';
 using from './customer-service';
 using from './landing-service';
 using from './order-service';
+using from './purchase-history-service';
