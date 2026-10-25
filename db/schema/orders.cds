@@ -1,7 +1,6 @@
 using { cuid, managed, Country } from '@sap/cds/common';
 using { bookstore.Books } from './catalog';
 using { bookstore.Customers } from './customers';
-using { bookstore.PostalCodes } from './addresses';
 
 namespace bookstore;
 
