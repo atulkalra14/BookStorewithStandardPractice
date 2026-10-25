@@ -20,7 +20,7 @@
 ## Entities (namespace `bookstore`)
 
 - `Authors` (`cuid`, `managed`): `name` (mandatory), `dateOfBirth`; back-link `books`.
-- `Books` (`cuid`, `managed`): `title` and `author` (mandatory), `price` (0 to 999999.99), `stock` (0 to 999999).
+- `Books` (`cuid`, `managed`): `title` and `author` (mandatory), `price` (0 to 999999.99), `stock` (0 to 999999), optional `imageUrl` (path to a static cover image, for example `/com.bookstore.landing/images/covers/cover-1.svg`; admins maintain it through `AdminService`).
 - `Customers` (`cuid`, `managed`): `name`, `email` (format checked in the handler) and `userId` (all mandatory; `userId` unique). Annotated `@PersonalData` (`DataSubject`). Rows are provisioned outside the customer service (seed data only for now; the registration action was removed, row creation is decided with the orders slice). Role collections (including `Customer`) are assigned per subaccount, outside the app.
 
 ## Services
@@ -33,6 +33,7 @@
 
 - `LandingService` (`/odata/v4/landing`): read-only, requires `authenticated-user` (any logged-in user, also without a role; decision changed after the landing page failed to open for users without a role). Still no public endpoint (decision A2). Visible to every logged-in user: store details, discounts, new arrivals (title, price, creation date) and best sellers. `NewArrivals` shows books created in the last 30 days, `ActiveDiscounts` only discounts valid today, `StoreInfo` the store details (fake seed data in `test/data/`), `BestSellers` is an empty list until orders exist (decision B2).
 - `ActiveDiscounts` also returns `currency` (fixed `'EUR'`) and the virtual `discountedPrice` (`bookPrice` reduced by `percent`, rounded half up to cents, filled in `after READ`). The landing page quick links are Browse Books, Order Books, View Your Purchase History and Return Books; Order Books, View Your Purchase History and Return Books have no target yet (orders and returns slices). The discounts card is a custom OVP card (`app/landing/webapp/ext/discountCard`) showing the struck-through price, the new price and the percentage.
+- Landing images: static SVG files live in `app/landing/webapp/images/` (the stored paths are the same for every tenant; per-tenant branding needs an ADR). `StoreInfo.heroImageUrl` feeds the hero card, `Books.imageUrl` the covers on the discounts, new arrivals and best sellers cards (`NewArrivals.imageUrl`, `ActiveDiscounts.bookImageUrl`, `BestSellers.imageUrl`) and in the `app/book-shop` list and object page header. The hero, discounts and best sellers cards are custom OVP cards in `app/landing/webapp/ext/`; new arrivals is a link list card using `UI.HeaderInfo#NewArrivals`. Both fields are additive and optional; cards hide the image when the path is empty. No admin Fiori app exists yet, so images are maintained through the `AdminService` API or seed data.
 - `Discounts` (`cuid`, `managed`) and `StoreInfo` (`cuid`, `managed`) are new tables (additive). No admin UI maintains them yet.
 
 ## Orders (slice 6)

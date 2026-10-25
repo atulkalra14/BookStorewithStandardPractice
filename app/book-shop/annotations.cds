@@ -7,12 +7,14 @@ annotate service.Books with @(
         TypeNamePlural : '{i18n>Books}',
         Title          : { $Type : 'UI.DataField', Value : title },
         Description    : { $Type : 'UI.DataField', Value : author.name },
+        ImageUrl       : imageUrl,
     },
     UI.SelectionFields : [
         title,
         author_ID,
     ],
     UI.LineItem : [
+        { $Type : 'UI.DataField', Value : imageUrl },
         { $Type : 'UI.DataField', Value : title },
         { $Type : 'UI.DataField', Value : author_ID },
         { $Type : 'UI.DataField', Value : price },
@@ -38,6 +40,7 @@ annotate service.Books with @(
 );
 
 annotate service.Books with {
+    imageUrl @(UI.IsImageURL : true, Common.Text : title, Common.TextArrangement : #TextOnly);
     author @(
         Common.Text            : author.name,
         Common.TextArrangement : #TextOnly,
