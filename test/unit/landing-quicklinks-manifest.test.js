@@ -24,13 +24,14 @@ describe('quickLinks card', () => {
   })
   // OVP prepends its own base path: '/com.bookstore.landing' when index.html is opened directly and
   // '/com.bookstore.landing/test' in the Fiori launchpad sandbox. '../../' reaches the site root in both.
-  it('Browse Books targets the book shop; Order Books targets the orders app, Purchase History the purchase-history app; Return Books has no targetUri yet', () => {
+  it('Browse Books targets the book shop; Order Books targets the orders app, Purchase History the purchase-history app; Return Books the returns app', () => {
     const all = items()
     expect(all.length).toBe(4)
     expect(all[0].targetUri).toBe('../../com.bookstore.bookshop/index.html')
     expect(all[1].targetUri).toBe('../../com.bookstore.orders/index.html')
     expect(all[2].targetUri).toBe('../../com.bookstore.purchasehistory/index.html')
-    expect(all[3].targetUri || '').toBe('')
+    expect(all[3].targetUri).toBe('../../com.bookstore.returns/index.html')
+    expect(all[3].openInNewWindow).toBe(false)
   })
   it('every item has an sap-icon imageUri and an i18n imageAltText', () => {
     const all = items()

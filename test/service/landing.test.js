@@ -13,7 +13,15 @@ const user = username => ({ auth: { username, password: '' } })
 const alice = user('alice')
 const base = '/odata/v4/landing'
 
-beforeAll(seedLanding)
+// BestSellers counts placed orders and the dev seed data contains orders for alice; these tests expect none.
+// NOTE: direct db access (no authorization) is acceptable for test setup only.
+beforeAll(async () => {
+  await cds.db.run(cds.ql.DELETE.from('bookstore.ReturnItems'))
+  await cds.db.run(cds.ql.DELETE.from('bookstore.Returns'))
+  await cds.db.run(cds.ql.DELETE.from('bookstore.OrderItems'))
+  await cds.db.run(cds.ql.DELETE.from('bookstore.Orders'))
+  await seedLanding()
+})
 
 describe('LandingService NewArrivals', () => {
   const ids = async () => (await GET(`${base}/NewArrivals?$top=1000`, alice)).data.value.map(r => r.ID)

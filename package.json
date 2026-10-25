@@ -29,7 +29,8 @@
     "watch-book-shop": "cds watch --open \"com.bookstore.bookshop/index.html?sap-ui-xx-viewCache=false\" --livereload false",
     "watch-landing": "cds watch --open \"com.bookstore.landing/index.html?sap-ui-xx-viewCache=false\" --livereload false",
     "watch-orders": "cds watch --open com.bookstore.orders/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-purchase-history": "cds watch --open \"com.bookstore.purchasehistory/index.html?sap-ui-xx-viewCache=false\" --livereload false"
+    "watch-purchase-history": "cds watch --open \"com.bookstore.purchasehistory/index.html?sap-ui-xx-viewCache=false\" --livereload false",
+    "watch-returns": "cds watch --open com.bookstore.returns/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "jest": {
     "testEnvironment": "node",
@@ -121,6 +122,7 @@
     "app/book-shop",
     "app/landing",
     "app/orders",
-    "app/purchase-history"
+    "app/purchase-history",
+    "app/returns"
   ]
 }

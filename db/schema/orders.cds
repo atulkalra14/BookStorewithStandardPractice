@@ -18,6 +18,7 @@ entity Orders : cuid, managed {
   totalAmount  : Decimal(11,2)  @readonly @title: '{i18n>TotalAmount}';  // sum of item line totals, recalculated by the handler
   currency     : String(3)      @readonly @title: '{i18n>Currency}';     // fixed 'EUR' until Books gets a currency
   placedAt     : Timestamp      @readonly @title: '{i18n>PlacedAt}';
+  deliveredAt  : Timestamp      @readonly @title: '{i18n>DeliveredAt}';  // set by seed data only until a fulfilment slice exists; starts the return window
   shipToName   : String(111)    @mandatory @title: '{i18n>ShipToName}';
   shipToStreet : String(111)    @mandatory @title: '{i18n>ShipToStreet}';
   shipToCity   : String(60)     @mandatory @title: '{i18n>ShipToCity}';   // Essen only for now, checked in srv/lib/orders.js

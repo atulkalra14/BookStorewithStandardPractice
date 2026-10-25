@@ -1,0 +1,32 @@
+{
+  "generationParameters": {
+    "generationDate": "Sun Oct 25 2026 16:59:39 GMT+0100 (Central European Standard Time)",
+    "generatorPlatform": "CLI",
+    "serviceType": "Local CAP",
+    "metadataFilename": "",
+    "serviceUrl": "http://localhost:4004/odata/v4/return/",
+    "appName": "returns",
+    "appTitle": "Returns",
+    "appDescription": "Request and track returns of delivered orders",
+    "appNamespace": "com.bookstore",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.153.0",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.33.0",
+    "template": "List Report Page V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "Returns"
+      },
+      {
+        "type": "Navigation Entity",
+        "value": "items"
+      }
+    ],
+    "launchText": "To launch the generated app, start your CAP project:  and navigate to the following location in your browser:\n\nhttp://localhost:4004/returns/webapp/index.html"
+  }
+}
