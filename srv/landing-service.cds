@@ -5,7 +5,7 @@ using { bookstore } from '../db';
 @requires: 'authenticated-user'
 service LandingService {
   // Books added in the last 30 days: the filter is applied in the handler (srv/lib/landing.js).
-  @readonly entity NewArrivals as projection on bookstore.Books { key ID, title, price, createdAt, imageUrl };
+  @readonly entity NewArrivals as projection on bookstore.Books { key ID, title, descr, price, createdAt, imageUrl };
 
   // Discounts whose validity window includes today: the filter is applied in the handler.
   // discountedPrice is filled by the handler (srv/lib/landing.js): bookPrice reduced by percent, rounded to 2 decimals.
@@ -13,6 +13,7 @@ service LandingService {
   @readonly entity ActiveDiscounts as projection on bookstore.Discounts {
     key ID, percent, validFrom, validTo, description,
     book.title as bookTitle,
+    book.descr as bookDescr,
     book.price as bookPrice,
     book.imageUrl as bookImageUrl,
     virtual null as discountedPrice : Decimal(9, 2),
@@ -26,6 +27,7 @@ service LandingService {
   entity BestSellers {
     key ID       : UUID;
         title    : String(111);
+        descr    : String(1000);
         sold     : Integer;
         imageUrl : String(500);
   }

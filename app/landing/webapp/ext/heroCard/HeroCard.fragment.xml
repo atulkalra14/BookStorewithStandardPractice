@@ -6,17 +6,20 @@
         items="{path: 'mainModel>/StoreInfo', length: 1}">
         <CustomListItem>
             <VBox class="bookstoreHero">
-                <Image
-                    src="{mainModel>heroImageUrl}"
-                    decorative="true"
-                    class="bookstoreHeroImage"
-                    width="100%"
-                    height="8rem"
-                    densityAware="false"
-                    visible="{= !!${mainModel>heroImageUrl}}" />
                 <VBox class="sapUiSmallMargin">
                     <Title text="{mainModel>name}" titleStyle="H2" />
                     <Text text="{mainModel>description}" />
+                    <VBox class="bookstoreQuote sapUiSmallMarginTop">
+                        <Text text="{@i18n>heroWhyBooks}" />
+                    </VBox>
+                    <VBox class="bookstoreQuote sapUiSmallMarginTop">
+                        <Text class="bookstoreQuoteText" text="{@i18n>heroQuote1}" />
+                        <Text class="bookstoreQuoteAuthor" text="{@i18n>heroQuote1Author}" />
+                    </VBox>
+                    <VBox class="bookstoreQuote sapUiSmallMarginTop">
+                        <Text class="bookstoreQuoteText" text="{@i18n>heroQuote2}" />
+                        <Text class="bookstoreQuoteAuthor" text="{@i18n>heroQuote2Author}" />
+                    </VBox>
                 </VBox>
             </VBox>
         </CustomListItem>

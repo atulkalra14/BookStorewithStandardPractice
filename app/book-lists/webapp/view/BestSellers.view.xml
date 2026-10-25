@@ -1,0 +1,31 @@
+<mvc:View
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    core:require="{formatMessage: 'sap/base/strings/formatMessage'}"
+    controllerName="com.bookstore.booklists.view.BookList">
+    <Page title="{i18n>bestSellersTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <subHeader>
+            <Toolbar>
+                <Text text="{i18n>bestSellersSubtitle}" />
+            </Toolbar>
+        </subHeader>
+        <List
+            id="bookList"
+            class="booklistsList"
+            showSeparators="None"
+            noDataText="{i18n>noBestSellers}"
+            items="{path: '/BestSellers', sorter: {path: 'sold', descending: true}}">
+            <CustomListItem class="booklistsCard">
+                <HBox class="sapUiSmallMargin">
+                    <Image src="{imageUrl}" alt="{title}" class="booklistsCover sapUiSmallMarginEnd" width="6rem" height="9rem" densityAware="false" visible="{= !!${imageUrl}}" />
+                    <VBox>
+                        <Title text="{title}" titleStyle="H3" />
+                        <Text class="sapUiTinyMarginTopBottom" text="{descr}" />
+                        <ObjectStatus state="Information" icon="sap-icon://trend-up" text="{= formatMessage(${i18n>copiesSold}, [${sold}])}" />
+                    </VBox>
+                </HBox>
+            </CustomListItem>
+        </List>
+    </Page>
+</mvc:View>

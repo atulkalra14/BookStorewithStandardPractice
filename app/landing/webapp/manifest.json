@@ -119,10 +119,11 @@
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.heroCard",
         "settings": {
+          "targetUri": "../../com.bookstore.landing/website/index.html",
           "title": "{{heroTitle}}",
           "entitySet": "StoreInfo",
           "defaultSpan": {
-            "rows": 14,
+            "rows": 22,
             "cols": 2
           }
         }
@@ -134,7 +135,7 @@
           "title": "{{quickLinksTitle}}",
           "listFlavor": "standard",
           "defaultSpan": {
-            "rows": 14,
+            "rows": 22,
             "cols": 1
           },
           "staticContent": [
@@ -175,18 +176,23 @@
       },
       "storeInfo": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.list",
+        "template": "com.bookstore.landing.ext.storeInfoCard",
         "settings": {
+          "targetUri": "../../com.bookstore.landing/website/about.html",
           "title": "{{storeInfoTitle}}",
           "subTitle": "{{storeInfoSubtitle}}",
           "entitySet": "StoreInfo",
-          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem#StoreInfo"
+          "defaultSpan": {
+            "rows": 20,
+            "cols": 1
+          }
         }
       },
       "discounts": {
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.discountCard",
         "settings": {
+          "targetUri": "../../com.bookstore.booklists/index.html#/discounts",
           "title": "{{discountsTitle}}",
           "subTitle": "{{discountsSubtitle}}",
           "entitySet": "ActiveDiscounts"
@@ -194,21 +200,19 @@
       },
       "newArrivals": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.linklist",
+        "template": "com.bookstore.landing.ext.newArrivalsCard",
         "settings": {
+          "targetUri": "../../com.bookstore.booklists/index.html#/new-arrivals",
           "title": "{{newArrivalsTitle}}",
           "subTitle": "{{newArrivalsSubtitle}}",
-          "listFlavor": "standard",
-          "entitySet": "NewArrivals",
-          "sortBy": "createdAt",
-          "sortOrder": "descending",
-          "headerAnnotationPath": "com.sap.vocabularies.UI.v1.HeaderInfo#NewArrivals"
+          "entitySet": "NewArrivals"
         }
       },
       "bestSellers": {
         "model": "mainModel",
         "template": "com.bookstore.landing.ext.bestSellerCard",
         "settings": {
+          "targetUri": "../../com.bookstore.booklists/index.html#/best-sellers",
           "title": "{{bestSellersTitle}}",
           "subTitle": "{{bestSellersSubtitle}}",
           "entitySet": "BestSellers"

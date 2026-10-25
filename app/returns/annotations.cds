@@ -134,3 +134,10 @@ annotate service.Returns with @(
         TargetProperties : [ 'refundAmount' ],
     },
 );
+
+// Submitted returns are immutable (the service rejects UPDATE and DELETE): hide the Edit and Delete buttons.
+// A draft of a new request is still discarded through the Discard Draft action.
+annotate service.Returns with @(
+    UI.UpdateHidden : true,
+    UI.DeleteHidden : true,
+);

@@ -56,3 +56,26 @@ describe('LandingService BestSellers with orders', () => {
     expect(res.data.value[0].ID).toBe(B3)
   })
 })
+
+describe('LandingService book descriptions', () => {
+  const asLang = lang => ({ auth: { username: 'alice', password: '' }, headers: { 'Accept-Language': lang } })
+  const descr = async (lang, set, field = 'descr') => {
+    const res = await t.GET(`${landing}/${set}?$filter=${set === 'ActiveDiscounts' ? 'bookTitle' : 'title'} eq 'Test Book One'`, asLang(lang))
+    expect(res.status).toBe(200)
+    return res.data.value[0]?.[field]
+  }
+
+  it('BestSellers carries the description in the request language', async () => {
+    await api.place(user('gina'), [{ book_ID: B1, quantity: 1 }])
+    expect(await descr('en', 'BestSellers')).toMatch(/gripping tale/)
+    expect(await descr('de', 'BestSellers')).toMatch(/packende Geschichte/)
+  })
+  it('NewArrivals and ActiveDiscounts expose the book description', async () => {
+    const res = await t.GET(`${landing}/NewArrivals`, asLang('de'))
+    expect(res.status).toBe(200)
+    expect(res.data.value.every(b => 'descr' in b)).toBe(true)
+    const disc = await t.GET(`${landing}/ActiveDiscounts?$select=bookTitle,bookDescr`, asLang('de'))
+    expect(disc.status).toBe(200)
+    expect(disc.data.value.every(d => 'bookDescr' in d)).toBe(true)
+  })
+})

@@ -1,0 +1,24 @@
+.booklistsList {
+    max-width: 60rem;
+    margin: 0 auto;
+}
+
+.booklistsCard {
+    margin: 0.75rem 1rem;
+    border: 1px solid var(--sapTile_BorderColor);
+    border-radius: 0.5rem;
+    box-shadow: var(--sapContent_Shadow0);
+    background: var(--sapTile_Background);
+}
+
+.booklistsCover {
+    object-fit: cover;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+}
+
+.booklistsOldPrice {
+    text-decoration: line-through;
+    color: var(--sapContent_LabelColor);
+}

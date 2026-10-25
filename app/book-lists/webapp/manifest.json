@@ -1,0 +1,74 @@
+{
+  "_version": "1.89.0",
+  "sap.app": {
+    "id": "com.bookstore.booklists",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": { "version": "0.0.1" },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/landing/",
+        "type": "OData",
+        "settings": { "odataVersion": "4.0" }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": { "desktop": true, "tablet": true, "phone": true }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "com.bookstore.booklists.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.153.0",
+      "libs": { "sap.m": {}, "sap.ui.core": {} }
+    },
+    "contentDensities": { "compact": true, "cozy": true },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.bookstore.booklists.i18n.i18n",
+          "supportedLocales": ["en", "de"],
+          "fallbackLocale": "en"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "settings": { "operationMode": "Server", "autoExpandSelect": true }
+      }
+    },
+    "resources": {
+      "css": [{ "uri": "css/style.css" }]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.bookstore.booklists.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        { "name": "home", "pattern": "", "target": "bestSellers" },
+        { "name": "bestSellers", "pattern": "best-sellers", "target": "bestSellers" },
+        { "name": "discounts", "pattern": "discounts", "target": "discounts" },
+        { "name": "newArrivals", "pattern": "new-arrivals", "target": "newArrivals" }
+      ],
+      "targets": {
+        "bestSellers": { "name": "BestSellers", "id": "bestSellers" },
+        "discounts": { "name": "Discounts", "id": "discounts" },
+        "newArrivals": { "name": "NewArrivals", "id": "newArrivals" }
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Turner Books – Welcome</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="demo-note">Demo website with sample content</div>
+<header class="site-header">
+    <div class="wrap">
+        <a class="brand" href="index.html">Page Turner <span>Books</span></a>
+        <nav class="nav">
+            <a class="active" href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="visit.html">Visit Us</a>
+            <a href="../index.html">Shop</a>
+        </nav>
+    </div>
+</header>
+
+<div class="hero">
+    <img src="../images/hero.svg" alt="">
+    <div class="copy wrap">
+        <h1>Find the story that finds you</h1>
+        <p>A friendly neighbourhood bookshop with something for every reader, from gripping novels to practical guides.</p>
+        <a class="btn" href="../index.html">Browse our books</a>
+    </div>
+</div>
+
+<section>
+    <div class="wrap">
+        <h2>This season on our shelves</h2>
+        <p class="lead">Hand-picked by our booksellers. Ask us for a recommendation: we love matching readers with their next favourite book.</p>
+        <div class="grid">
+            <div class="card"><img src="../images/covers/cover-1.svg" alt="Cover of Test Book One" style="object-position: center top"><div class="body"><span class="tag">Fiction</span><h3>Test Book One</h3><p>A gripping tale of ambition and loss that keeps you turning pages late into the night.</p></div></div>
+            <div class="card"><img src="../images/covers/cover-2.svg" alt="Cover of Test Book Two" style="object-position: center top"><div class="body"><span class="tag">Stories</span><h3>Test Book Two</h3><p>A warm and witty collection of stories about friendship, travel and second chances.</p></div></div>
+            <div class="card"><img src="../images/covers/cover-3.svg" alt="Cover of Test Book Three" style="object-position: center top"><div class="body"><span class="tag">Non-fiction</span><h3>Test Book Three</h3><p>A practical, beautifully written guide to thinking clearly and living with curiosity.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="alt">
+    <div class="wrap split">
+        <img src="../images/reading-corner.svg" alt="Illustration of our reading corner">
+        <div>
+            <h2>Why books matter</h2>
+            <p>Books open doors to other worlds, sharpen the mind and keep curiosity alive. Whether you want to escape, learn or simply unwind, there is a story waiting for you.</p>
+            <blockquote>A reader lives a thousand lives before he dies. The man who never reads lives only one.<cite>George R. R. Martin</cite></blockquote>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="wrap">
+        <h2>More than a shop</h2>
+        <p class="lead">Come for the books, stay for the community.</p>
+        <div class="grid">
+            <div class="card"><img src="../images/events.svg" alt="Illustration of a book club evening"><div class="body"><h3>Monthly book club</h3><p>Meet fellow readers on the first Thursday of every month. New members always welcome.</p></div></div>
+            <div class="card"><img src="../images/store-front.svg" alt="Illustration of our shop front"><div class="body"><h3>Special orders</h3><p>Can't find a title? We order it for you, usually within three working days.</p></div></div>
+            <div class="card"><img src="../images/cafe.svg" alt="Illustration of our coffee corner"><div class="body"><h3>Coffee corner</h3><p>Read a few pages over a fresh coffee before you decide what to take home.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="alt">
+    <div class="wrap">
+        <h2>Get our reading list</h2>
+        <p class="lead">One friendly email a month with new arrivals, events and offers. No spam.</p>
+        <form class="news" onsubmit="event.preventDefault(); this.querySelector('button').textContent = 'Thank you!';">
+            <input type="email" placeholder="you@example.com" aria-label="Email address" required>
+            <button class="btn" type="submit">Subscribe</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <div class="wrap cols">
+        <div><h4>Page Turner Books</h4>12 Reading Lane, Booktown<br>+1 555 0100</div>
+        <div><h4>Opening hours</h4>Mon–Sat 9:00–18:00<br>Sunday closed</div>
+        <div><h4>Explore</h4><a href="about.html">About Us</a><br><a href="visit.html">Visit Us</a><br><a href="../index.html">Back to shop</a></div>
+    </div>
+</footer>
+</body>
+</html>

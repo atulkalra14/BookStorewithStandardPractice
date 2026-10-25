@@ -20,7 +20,7 @@
                     <ObjectStatus
                         state="Information"
                         icon="sap-icon://trend-up"
-                        text="{= formatMessage(${@i18n>soldCount}, [${mainModel>sold}])}" />
+                        text="{= formatMessage(${@i18n>copiesSold}, [${mainModel>sold}])}" />
                 </VBox>
             </HBox>
         </CustomListItem>

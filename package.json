@@ -27,6 +27,7 @@
     "lint": "eslint .",
     "i18n:check": "node scripts/check-i18n.js --languages=en,de",
     "watch-book-shop": "cds watch --open \"com.bookstore.bookshop/index.html?sap-ui-xx-viewCache=false\" --livereload false",
+    "watch-book-lists": "cds watch --open \"com.bookstore.booklists/index.html?sap-ui-xx-viewCache=false\" --livereload false",
     "watch-landing": "cds watch --open \"com.bookstore.landing/index.html?sap-ui-xx-viewCache=false\" --livereload false",
     "watch-orders": "cds watch --open com.bookstore.orders/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-purchase-history": "cds watch --open \"com.bookstore.purchasehistory/index.html?sap-ui-xx-viewCache=false\" --livereload false",
@@ -119,6 +120,7 @@
     "app/*"
   ],
   "sapux": [
+    "app/book-lists",
     "app/book-shop",
     "app/landing",
     "app/orders",
