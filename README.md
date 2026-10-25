@@ -7,25 +7,11 @@ An online book shopping app built with SAP CAP (Node.js) for SAP BTP.
 
 Technical conventions and workflow are in `CLAUDE.md`; domain notes and decisions go in `docs/`.
 
-# Getting Started
+## Getting Started
 
-Welcome to your new CAP project.
+```sh
+npm ci
+npx cds watch
+```
 
-It contains these folders and files, following our recommended project layout:
-
-File or Folder | Purpose
----------|----------
-`app/` | content for UI frontends goes here
-`db/` | your domain models and data go here
-`srv/` | your service models and code go here
-`readme.md` | this getting started guide
-
-## Next Steps
-
-- Open a new terminal and run `cds watch`
-- (in VS Code simply choose _**Terminal** > Run Task > cds watch_)
-- Start with your domain model, in a CDS file in `db/`
-
-## Learn More
-
-Learn more at <https://cap.cloud.sap>.
+See `CLAUDE.md` for all commands.
