@@ -8,14 +8,15 @@
   "dependencies": {
     "@cap-js/hana": "^3",
     "@sap/cds": "^10",
+    "@sap/cds-common-content": "^3.2.0",
     "@sap/cds-mtxs": "^4",
     "@sap/xssec": "^4"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^3",
     "@cap-js/cds-test": "^1",
-    "cds-plugin-ui5": "^0.17.0",
+    "@cap-js/sqlite": "^3",
     "@sap/cds-dk": "^10",
+    "cds-plugin-ui5": "^0.17.0",
     "eslint": "^10",
     "jest": "^30"
   },
@@ -26,7 +27,8 @@
     "lint": "eslint .",
     "i18n:check": "node scripts/check-i18n.js --languages=en,de",
     "watch-book-shop": "cds watch --open \"com.bookstore.bookshop/index.html?sap-ui-xx-viewCache=false\" --livereload false",
-    "watch-landing": "cds watch --open \"com.bookstore.landing/index.html?sap-ui-xx-viewCache=false\" --livereload false"
+    "watch-landing": "cds watch --open \"com.bookstore.landing/index.html?sap-ui-xx-viewCache=false\" --livereload false",
+    "watch-orders": "cds watch --open com.bookstore.orders/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "jest": {
     "testEnvironment": "node",
@@ -116,6 +118,7 @@
   ],
   "sapux": [
     "app/book-shop",
-    "app/landing"
+    "app/landing",
+    "app/orders"
   ]
 }

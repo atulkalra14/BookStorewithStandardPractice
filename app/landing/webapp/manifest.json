@@ -124,20 +124,24 @@
               "subTitle": "{{browseBooksSubtitle}}",
               "imageUri": "sap-icon://search",
               "imageAltText": "{{browseBooksIcon}}",
-              "targetUri": "../com.bookstore.bookshop/index.html",
+              "targetUri": "../../com.bookstore.bookshop/index.html",
               "openInNewWindow": false
             },
             {
               "title": "{{orderBooksTitle}}",
               "subTitle": "{{orderBooksSubtitle}}",
               "imageUri": "sap-icon://cart",
-              "imageAltText": "{{orderBooksIcon}}"
+              "imageAltText": "{{orderBooksIcon}}",
+              "targetUri": "../../com.bookstore.orders/index.html",
+              "openInNewWindow": false
             },
             {
               "title": "{{purchaseHistoryTitle}}",
               "subTitle": "{{purchaseHistorySubtitle}}",
               "imageUri": "sap-icon://history",
-              "imageAltText": "{{purchaseHistoryIcon}}"
+              "imageAltText": "{{purchaseHistoryIcon}}",
+              "targetUri": "../../com.bookstore.orders/index.html",
+              "openInNewWindow": false
             },
             {
               "title": "{{returnBooksTitle}}",

@@ -6,6 +6,7 @@
 |---|---|---|
 | Catalog | `db/schema/catalog.cds` | Slice 1: Authors, Books (read-only API); slice 2: draft-enabled Books admin API; slice 3: customer Fiori list report and object page `app/book-shop` on `CatalogService` |
 | Customers | `db/schema/customers.cds` | Slice 4: Customers (personal data), own-profile `CustomerService`, read-only admin view |
+| Orders | `db/schema/orders.cds` | Slice 6: Orders (draft = cart), OrderItems, own-orders `OrderService`, Fiori app `app/orders` |
 | Landing | `db/schema/landing.cds` | Slice 5: Discounts, StoreInfo, read-only `LandingService`, Overview Page `app/landing` |
 
 ## Glossary
@@ -34,22 +35,30 @@
 - `ActiveDiscounts` also returns `currency` (fixed `'EUR'`) and the virtual `discountedPrice` (`bookPrice` reduced by `percent`, rounded half up to cents, filled in `after READ`). The landing page quick links are Browse Books, Order Books, View Your Purchase History and Return Books; Order Books, View Your Purchase History and Return Books have no target yet (orders and returns slices). The discounts card is a custom OVP card (`app/landing/webapp/ext/discountCard`) showing the struck-through price, the new price and the percentage.
 - `Discounts` (`cuid`, `managed`) and `StoreInfo` (`cuid`, `managed`) are new tables (additive). No admin UI maintains them yet.
 
+## Orders (slice 6)
+
+- `Orders` (`cuid`, `managed`): `orderNumber` (`ORD-<year>-<6 digits>`, next number of the year per tenant), `customer`, `status` (`Placed`, `Cancelled`), `totalAmount`, `currency` (fixed `EUR`), `placedAt` and the mandatory ship-to fields. All but the ship-to fields are read-only and set by the handler. `OrderItems` (composition): `book`, `quantity` (1 to 99, checked in the handler for a translated message), `unitPrice` (price snapshot from `Books`, never from the client), `lineTotal`.
+- `OrderService` (`/odata/v4/order`): requires `Customer`; rows only where `customer.userId = $user`. `Orders` is draft-enabled and the draft is the cart: total is recalculated on every item change. Activating the draft places the order (`before SAVE`): validation (`ERR_ORDER_EMPTY`, `_DUPLICATE_BOOK`, `_QUANTITY_INVALID`, `_INSUFFICIENT_STOCK`), price snapshot, conditional stock decrement, order number. Placed orders are immutable (`ERR_ORDER_NOT_EDITABLE`, `ERR_ORDER_NOT_DELETABLE`). Bound action `cancel` (only `Placed`, enabled by `@Core.OperationAvailable`) restores stock; another customer's order gives 404. A first-time customer gets a `Customers` row on the first cart (name and email from token claims, else the user ID); this write uses the db service without authorization, limited to the caller's own `userId`.
+- `LandingService.BestSellers` now sums quantities of `Placed` orders (cancelled orders and drafts do not count); it is readable by every logged-in user and exposes only totals per book.
+- The landing quick links Order Books and View Your Purchase History open `app/orders`.
+- Deferred: payment, shipping methods and costs, promo codes, tax, confirmation emails (outbox), returns, admin order management and fulfilment statuses, translated status texts (status codes show as stored), currency per book, order number sequence under heavy concurrency (relies on the unique constraint), real cross-tenant test (needs the sidecar).
+
 ## Roles
 
 | Role | Scope | Grants |
 |---|---|---|
 | `BookViewer` | `$XSAPPNAME.BookViewer` | Read the catalog |
 | `BookAdmin` | `$XSAPPNAME.BookAdmin` | Create, edit (draft) and delete books; read authors and customers |
-| `Customer` | `$XSAPPNAME.Customer` | Read and edit the own customer profile |
+| `Customer` | `$XSAPPNAME.Customer` | Read and edit the own customer profile; create, read and cancel the own orders |
 
 The scope name is permanent once released. Role collections are assigned per subaccount at deployment time (not in `xs-security.json`).
 
 ## Deferred
 
-- Customer provisioning: no flow creates `Customers` rows after the removal of registration (seed data only). Decide it with the orders slice; the `Customer` role still has to be assigned per subaccount.
+- Customer provisioning: no flow creates `Customers` rows after the removal of registration (seed data only). Orders auto-create the row on the first cart (see Orders); the `Customer` role still has to be assigned per subaccount.
 - Landing page content: no admin app maintains `Discounts` and `StoreInfo` (seed data only; `StoreInfo` is expected to hold one record per tenant, not enforced). "Today" for discounts and the 30-day new-arrival window use UTC, not the store's time zone. `Discounts.validTo >= validFrom` is declared with `@assert` (`ERR_DISCOUNT_RANGE`) but only takes effect once a service allows writes.
 - Decided in the security review: every `BookAdmin` may read customer personal data (no separate role for now; revisit with audit logging). Email format is validated only in the handler (keyed `ERR_EMAIL_INVALID`), not by `@assert.format`, so users get one translated message.
-- Genres (localized code list), admin Fiori app on `AdminService` (draft create and edit), draft for Authors, orders and stock handling.
+- Genres (localized code list), admin Fiori app on `AdminService` (draft create and edit), draft for Authors.
 - `Authors.dateOfBirth` is still readable by every `BookViewer` through `CatalogService`; decide whether to exclude it (customer app does not need it).
 - `currency` on Books: the landing discount card shows a fixed EUR meanwhile; add with pricing or ordering, together with a seeded currency code list.
 - Cross-tenant isolation test: needs the mtx sidecar with two subscribed tenants (see `it.todo` in `test/tenant/`).
