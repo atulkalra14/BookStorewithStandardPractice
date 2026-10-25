@@ -35,3 +35,11 @@
     object-fit: cover;
     border-radius: 0.5rem;
 }
+
+/* Welcome card: let the intro and both quotes wrap fully instead of being cut off. */
+.bookstoreHero .sapMFT,
+.bookstoreHero .sapMText {
+    white-space: normal;
+    overflow: visible;
+    max-height: none;
+}

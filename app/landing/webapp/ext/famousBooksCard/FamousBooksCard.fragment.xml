@@ -1,0 +1,13 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <VBox class="sapUiTinyMargin">
+        <Image
+            core:require="{topBooks: 'com/bookstore/landing/ext/famousBooksCard/openTopBooks'}"
+            src="/com.bookstore.landing/images/famous-books.jpg"
+            alt="{@i18n>famousBooksImageAlt}"
+            tooltip="{@i18n>famousBooksOpenTooltip}"
+            class="bookstoreFamousBooksImage"
+            width="100%"
+            densityAware="false"
+            press="topBooks.open" />
+    </VBox>
+</core:FragmentDefinition>

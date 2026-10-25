@@ -63,11 +63,43 @@ describe('landing cards open their own pages', () => {
 
   it('every local file linked from the demo website exists', () => {
     const dir = 'app/landing/webapp/website'
-    for (const page of ['index.html', 'about.html', 'visit.html']) {
+    for (const page of ['index.html', 'about.html', 'visit.html', 'top-books.html']) {
       const html = read(`${dir}/${page}`)
       for (const m of html.matchAll(/(?:src|href)="((?!https?:|#|mailto:)[^"]+)"/g)) {
         expect(fs.existsSync(path.join(root, dir, m[1]))).toBe(true)
       }
+    }
+  })
+})
+
+describe('famous books card', () => {
+  const frag = read('app/landing/webapp/ext/famousBooksCard/FamousBooksCard.fragment.xml')
+
+  it('sits right after the about-store card', () => {
+    const ids = Object.keys(cards)
+    expect(ids.indexOf('famousBooks')).toBe(ids.indexOf('storeInfo') + 1)
+    expect(cards.famousBooks.template).toBe('com.bookstore.landing.ext.famousBooksCard')
+  })
+
+  it('shows only the collage image and opens the top 10 page when clicked', () => {
+    expect(cards.famousBooks.settings.targetUri).toBe('../../com.bookstore.landing/website/top-books.html')
+    expect(frag).not.toMatch(/<Link|href=/)
+    expect(frag.match(/<Image/g)).toHaveLength(1)
+    expect(frag).toMatch(/press="topBooks\.open"/)
+    expect(read('app/landing/webapp/ext/famousBooksCard/openTopBooks.js')).toContain('website/top-books.html')
+    const src = frag.match(/src="\/com\.bookstore\.landing\/(images\/[\w.-]+\.jpg)"/)[1]
+    expect(fs.existsSync(path.join(root, 'app/landing/webapp', src))).toBe(true)
+  })
+
+  it('top 10 page lists ten books', () => {
+    const html = read('app/landing/webapp/website/top-books.html')
+    expect(html.match(/<span class="rank">/g)).toHaveLength(10)
+  })
+
+  it.each(['i18n.properties', 'i18n_en.properties', 'i18n_de.properties'])('has its texts in %s', f => {
+    const props = read(`app/landing/webapp/i18n/${f}`)
+    for (const key of ['famousBooksTitle', 'famousBooksSubtitle', 'famousBooksImageAlt', 'famousBooksOpenTooltip']) {
+      expect(props).toMatch(new RegExp(`^${key}=.+$`, 'm'))
     }
   })
 })

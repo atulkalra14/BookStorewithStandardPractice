@@ -123,7 +123,7 @@
           "title": "{{heroTitle}}",
           "entitySet": "StoreInfo",
           "defaultSpan": {
-            "rows": 22,
+            "rows": 32,
             "cols": 2
           }
         }
@@ -181,6 +181,20 @@
           "targetUri": "../../com.bookstore.landing/website/about.html",
           "title": "{{storeInfoTitle}}",
           "subTitle": "{{storeInfoSubtitle}}",
+          "entitySet": "StoreInfo",
+          "defaultSpan": {
+            "rows": 20,
+            "cols": 1
+          }
+        }
+      },
+      "famousBooks": {
+        "model": "mainModel",
+        "template": "com.bookstore.landing.ext.famousBooksCard",
+        "settings": {
+          "targetUri": "../../com.bookstore.landing/website/top-books.html",
+          "title": "{{famousBooksTitle}}",
+          "subTitle": "{{famousBooksSubtitle}}",
           "entitySet": "StoreInfo",
           "defaultSpan": {
             "rows": 20,
