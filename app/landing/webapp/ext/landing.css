@@ -13,3 +13,25 @@
     object-fit: cover;
     border-radius: 0.5rem 0.5rem 0 0;
 }
+
+.bookstoreQuote {
+    border-left: 0.25rem solid var(--sapAccentColor1);
+    padding-left: 0.75rem;
+}
+
+.bookstoreQuoteText {
+    font-style: italic;
+}
+
+.bookstoreQuoteAuthor {
+    color: var(--sapContent_LabelColor);
+}
+
+.bookstoreStoreImages {
+    gap: 0.5rem;
+}
+
+.bookstoreStoreImage {
+    object-fit: cover;
+    border-radius: 0.5rem;
+}

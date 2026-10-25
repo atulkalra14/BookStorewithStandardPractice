@@ -122,7 +122,7 @@
           "title": "{{heroTitle}}",
           "entitySet": "StoreInfo",
           "defaultSpan": {
-            "rows": 14,
+            "rows": 22,
             "cols": 2
           }
         }
@@ -134,7 +134,7 @@
           "title": "{{quickLinksTitle}}",
           "listFlavor": "standard",
           "defaultSpan": {
-            "rows": 14,
+            "rows": 22,
             "cols": 1
           },
           "staticContent": [
@@ -175,12 +175,15 @@
       },
       "storeInfo": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.list",
+        "template": "com.bookstore.landing.ext.storeInfoCard",
         "settings": {
           "title": "{{storeInfoTitle}}",
           "subTitle": "{{storeInfoSubtitle}}",
           "entitySet": "StoreInfo",
-          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem#StoreInfo"
+          "defaultSpan": {
+            "rows": 20,
+            "cols": 1
+          }
         }
       },
       "discounts": {
@@ -194,15 +197,11 @@
       },
       "newArrivals": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.linklist",
+        "template": "com.bookstore.landing.ext.newArrivalsCard",
         "settings": {
           "title": "{{newArrivalsTitle}}",
           "subTitle": "{{newArrivalsSubtitle}}",
-          "listFlavor": "standard",
-          "entitySet": "NewArrivals",
-          "sortBy": "createdAt",
-          "sortOrder": "descending",
-          "headerAnnotationPath": "com.sap.vocabularies.UI.v1.HeaderInfo#NewArrivals"
+          "entitySet": "NewArrivals"
         }
       },
       "bestSellers": {

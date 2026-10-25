@@ -46,9 +46,25 @@ describe('landing cards with images', () => {
       expect(fs.existsSync(path.join(root, `app/landing/webapp/ext/${dir}/${frag}.fragment.xml`))).toBe(true)
     }
   })
-  it('new arrivals is a link list card with a HeaderInfo carrying the image', () => {
-    expect(cards.newArrivals.template).toBe('sap.ovp.cards.v4.linklist')
-    expect(cards.newArrivals.settings.headerAnnotationPath).toBe('com.sap.vocabularies.UI.v1.HeaderInfo#NewArrivals')
+  it('new arrivals is a custom card that renders the cover image', () => {
+    expect(cards.newArrivals.template).toBe('com.bookstore.landing.ext.newArrivalsCard')
+  })
+  it('new arrivals and about-store fragments show images with alt text', () => {
+    expect(read('app/landing/webapp/ext/newArrivalsCard/NewArrivalsCard.fragment.xml')).toMatch(/<Image(?:(?!\/>)[\s\S])*?alt="\{mainModel>/)
+    const about = read('app/landing/webapp/ext/storeInfoCard/StoreInfoCard.fragment.xml')
+    expect(about.match(/<Image/g)).toHaveLength(2)
+    for (const m of about.matchAll(/src="\/com\.bookstore\.landing\/(images\/[\w.-]+\.svg)"/g)) {
+      expect(fs.existsSync(path.join(root, 'app/landing/webapp', m[1]))).toBe(true)
+    }
+  })
+  it('discount badge shows the real percentage, not a message key', () => {
+    const f = read('app/landing/webapp/ext/discountCard/DiscountCard.fragment.xml')
+    expect(f).toMatch(/\$\{mainModel>percent\}/)
+    expect(f).not.toMatch(/discountPercent/)
+  })
+  it('quick links card is tall enough to show all links without resizing', () => {
+    const links = cards.quickLinks.settings
+    expect(links.defaultSpan.rows).toBeGreaterThanOrEqual(links.staticContent.length * 5)
   })
   it('card fragments give images alt text or mark them decorative', () => {
     for (const f of ['discountCard/DiscountCard', 'bestSellerCard/BestSellerCard']) {
