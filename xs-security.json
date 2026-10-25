@@ -14,6 +14,10 @@
     {
       "name": "$XSAPPNAME.BookAdmin",
       "description": "Maintain books"
+    },
+    {
+      "name": "$XSAPPNAME.Customer",
+      "description": "Manage own customer profile"
     }
   ],
   "attributes": [],
@@ -21,12 +25,23 @@
     {
       "name": "BookViewer",
       "description": "Read the book catalog",
-      "scope-references": ["$XSAPPNAME.BookViewer"]
+      "scope-references": [
+        "$XSAPPNAME.BookViewer"
+      ]
     },
     {
       "name": "BookAdmin",
       "description": "Maintain books",
-      "scope-references": ["$XSAPPNAME.BookAdmin"]
+      "scope-references": [
+        "$XSAPPNAME.BookAdmin"
+      ]
+    },
+    {
+      "name": "Customer",
+      "description": "Manage own customer profile",
+      "scope-references": [
+        "$XSAPPNAME.Customer"
+      ]
     }
   ],
   "authorities-inheritance": false

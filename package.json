@@ -30,7 +30,10 @@
   "jest": {
     "testEnvironment": "node",
     "testTimeout": 20000,
-    "testPathIgnorePatterns": ["/node_modules/", "/gen/"]
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/gen/"
+    ]
   },
   "private": true,
   "cds": {
@@ -39,12 +42,58 @@
         "[development]": {
           "kind": "mocked",
           "users": {
-            "alice": { "tenant": "t1", "roles": ["BookViewer"] },
-            "bob": { "tenant": "t1", "roles": [] },
-            "carol": { "tenant": "t2", "roles": ["BookViewer"] },
-            "dave": { "tenant": "t1", "roles": ["BookAdmin"] },
-            "erin": { "tenant": "t2", "roles": ["BookAdmin"] },
-            "frank": { "tenant": "t1", "roles": ["BookAdmin"] },
+            "alice": {
+              "tenant": "t1",
+              "roles": [
+                "BookViewer"
+              ]
+            },
+            "bob": {
+              "tenant": "t1",
+              "roles": []
+            },
+            "carol": {
+              "tenant": "t2",
+              "roles": [
+                "BookViewer"
+              ]
+            },
+            "dave": {
+              "tenant": "t1",
+              "roles": [
+                "BookAdmin"
+              ]
+            },
+            "erin": {
+              "tenant": "t2",
+              "roles": [
+                "BookAdmin"
+              ]
+            },
+            "frank": {
+              "tenant": "t1",
+              "roles": [
+                "BookAdmin"
+              ]
+            },
+            "gina": {
+              "tenant": "t1",
+              "roles": [
+                "Customer"
+              ]
+            },
+            "hugo": {
+              "tenant": "t1",
+              "roles": [
+                "Customer"
+              ]
+            },
+            "ivy": {
+              "tenant": "t2",
+              "roles": [
+                "Customer"
+              ]
+            },
             "*": false
           }
         }

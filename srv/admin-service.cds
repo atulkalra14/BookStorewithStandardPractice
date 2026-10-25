@@ -9,4 +9,8 @@ service AdminService {
   @readonly
   @restrict: [{ grant: 'READ', to: 'BookAdmin' }]
   entity Authors as projection on bookstore.Authors excluding { createdBy, modifiedBy };
+
+  @readonly
+  @restrict: [{ grant: 'READ', to: 'BookAdmin' }]
+  entity Customers as projection on bookstore.Customers excluding { createdBy, modifiedBy };
 }
