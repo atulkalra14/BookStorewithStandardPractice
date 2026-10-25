@@ -54,8 +54,3 @@ export function addDiscountedPrice (result, req) {
     for (const name of added) delete row[name]
   }
 }
-
-// No orders exist yet, so there is nothing to rank. Replace with the real ranking in the orders slice.
-export function noBestSellers () {
-  return []
-}

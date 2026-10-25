@@ -22,11 +22,15 @@ describe('quickLinks card', () => {
   it('subtitles use matching i18n keys', () => {
     expect(items().map(i => key(i.subTitle))).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle'])
   })
-  it('Browse Books keeps its target; the other three have no targetUri', () => {
+  // OVP prepends its own base path: '/com.bookstore.landing' when index.html is opened directly and
+  // '/com.bookstore.landing/test' in the Fiori launchpad sandbox. '../../' reaches the site root in both.
+  it('Browse Books targets the book shop; Order Books and Purchase History target the orders app; Return Books has no targetUri yet', () => {
     const all = items()
-    expect(all[0].targetUri).toBe('../com.bookstore.bookshop/index.html')
     expect(all.length).toBe(4)
-    for (const i of all.slice(1)) expect(i.targetUri || '').toBe('')
+    expect(all[0].targetUri).toBe('../../com.bookstore.bookshop/index.html')
+    expect(all[1].targetUri).toBe('../../com.bookstore.orders/index.html')
+    expect(all[2].targetUri).toBe('../../com.bookstore.orders/index.html')
+    expect(all[3].targetUri || '').toBe('')
   })
   it('every item has an sap-icon imageUri and an i18n imageAltText', () => {
     const all = items()

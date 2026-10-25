@@ -20,7 +20,7 @@ service LandingService {
 
   @readonly entity StoreInfo as projection on bookstore.StoreInfo { key ID, name, address, phone, openingHours, description };
 
-  // No orders exist yet: the handler returns an empty list until the orders slice provides sales data.
+  // Quantity sold per book over Placed orders, computed by the handler (srv/lib/orders.js). Aggregates only, no customer data.
   @readonly @cds.persistence.skip
   entity BestSellers {
     key ID    : UUID;
