@@ -46,7 +46,9 @@
             "alice": {
               "tenant": "t1",
               "roles": [
-                "BookViewer"
+                "BookViewer",
+                "BookAdmin",
+                "Customer"
               ]
             },
             "bob": {

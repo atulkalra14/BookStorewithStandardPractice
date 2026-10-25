@@ -61,6 +61,6 @@ describe('AdminService draft ownership (dave owns the draft, frank is another Bo
     const res = await GET(q, frank)
     expect(res.status).toBe(200)
     expect(res.data.DraftAdministrativeData.InProcessByUser).toBe('dave')
-    expect((await GET(q, user('alice'))).status).toBe(403)
+    expect((await GET(q, user('carol'))).status).toBe(403)
   })
 })

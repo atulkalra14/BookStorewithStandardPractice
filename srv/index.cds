@@ -3,4 +3,3 @@ using from './catalog-service';
 using from './admin-service';
 using from './customer-service';
 using from './landing-service';
-using from './registration-service';

@@ -6,7 +6,7 @@
 |---|---|---|
 | Catalog | `db/schema/catalog.cds` | Slice 1: Authors, Books (read-only API); slice 2: draft-enabled Books admin API; slice 3: customer Fiori list report and object page `app/book-shop` on `CatalogService` |
 | Customers | `db/schema/customers.cds` | Slice 4: Customers (personal data), own-profile `CustomerService`, read-only admin view |
-| Landing | `db/schema/landing.cds` | Slice 5: Discounts, StoreInfo, read-only `LandingService`, `RegistrationService.registerCustomer`, Overview Page `app/landing` |
+| Landing | `db/schema/landing.cds` | Slice 5: Discounts, StoreInfo, read-only `LandingService`, Overview Page `app/landing` |
 
 ## Glossary
 
@@ -20,7 +20,7 @@
 
 - `Authors` (`cuid`, `managed`): `name` (mandatory), `dateOfBirth`; back-link `books`.
 - `Books` (`cuid`, `managed`): `title` and `author` (mandatory), `price` (0 to 999999.99), `stock` (0 to 999999).
-- `Customers` (`cuid`, `managed`): `name`, `email` (format checked in the handler) and `userId` (all mandatory; `userId` unique). Annotated `@PersonalData` (`DataSubject`). Rows are provisioned outside the customer service (seed data for now; registration comes with orders).
+- `Customers` (`cuid`, `managed`): `name`, `email` (format checked in the handler) and `userId` (all mandatory; `userId` unique). Annotated `@PersonalData` (`DataSubject`). Rows are provisioned outside the customer service (seed data only for now; the registration action was removed, row creation is decided with the orders slice). Role collections (including `Customer`) are assigned per subaccount, outside the app.
 
 ## Services
 
@@ -30,8 +30,7 @@
 
 - `CustomerService` (`/odata/v4/customer`): requires role `Customer`. `Customers` is draft-enabled; `READ` and `UPDATE` only for the own row (`userId = $user`), no create or delete. New drafts are rejected (`before NEW`, 403), `userId` cannot be changed (`ERR_CUSTOMER_USERID_IMMUTABLE`), invalid email gives `ERR_EMAIL_INVALID`. `createdBy` and `modifiedBy` are not exposed. `DraftAdministrativeData` is limited to the caller's own entries, and the draft-lock error that names the lock holder becomes a 404 `ERR_CUSTOMER_NOT_FOUND`, so customers never learn another user's ID (pinned by `test/service/customer-draft-lock-privacy.test.js`).
 
-- `LandingService` (`/odata/v4/landing`): read-only, requires `authenticated-user` (any logged-in user, also without a role, so that a new user can see the page and register; decision changed after the landing page failed to open for users without a role). Still no public endpoint (decision A2). Visible to every logged-in user: store details, discounts, new arrivals (title, price, creation date) and best sellers. `NewArrivals` shows books created in the last 30 days, `ActiveDiscounts` only discounts valid today, `StoreInfo` the store details (fake seed data in `test/data/`), `BestSellers` is an empty list until orders exist (decision B2).
-- `RegistrationService` (`/odata/v4/registration`): requires `authenticated-user` (a new user has no role yet). `registerCustomer(name, email)` creates the `Customers` row of the caller (`userId` from the token, never from the request), `ERR_ALREADY_REGISTERED` (409) if it exists. It writes through the db service because no service exposes `Customers` for creation.
+- `LandingService` (`/odata/v4/landing`): read-only, requires `authenticated-user` (any logged-in user, also without a role; decision changed after the landing page failed to open for users without a role). Still no public endpoint (decision A2). Visible to every logged-in user: store details, discounts, new arrivals (title, price, creation date) and best sellers. `NewArrivals` shows books created in the last 30 days, `ActiveDiscounts` only discounts valid today, `StoreInfo` the store details (fake seed data in `test/data/`), `BestSellers` is an empty list until orders exist (decision B2).
 - `Discounts` (`cuid`, `managed`) and `StoreInfo` (`cuid`, `managed`) are new tables (additive). No admin UI maintains them yet.
 
 ## Roles
@@ -46,7 +45,7 @@ The scope name is permanent once released. Role collections are assigned per sub
 
 ## Deferred
 
-- Customer role after registration: `registerCustomer` creates the `Customers` row, but the user gets no `Customer` role from it (role collections are assigned per subaccount, outside the app). Until that step is designed (admin assignment in BTP cockpit or an automated flow), a registered user cannot use `CustomerService`. There is also no registration form in `app/landing` yet (the Overview Page cannot host one): the action is API-only.
+- Customer provisioning: no flow creates `Customers` rows after the removal of registration (seed data only). Decide it with the orders slice; the `Customer` role still has to be assigned per subaccount.
 - Landing page content: no admin app maintains `Discounts` and `StoreInfo` (seed data only; `StoreInfo` is expected to hold one record per tenant, not enforced). "Today" for discounts and the 30-day new-arrival window use UTC, not the store's time zone. `Discounts.validTo >= validFrom` is declared with `@assert` (`ERR_DISCOUNT_RANGE`) but only takes effect once a service allows writes.
 - Decided in the security review: every `BookAdmin` may read customer personal data (no separate role for now; revisit with audit logging). Email format is validated only in the handler (keyed `ERR_EMAIL_INVALID`), not by `@assert.format`, so users get one translated message.
 - Genres (localized code list), admin Fiori app on `AdminService` (draft create and edit), draft for Authors, orders and stock handling.

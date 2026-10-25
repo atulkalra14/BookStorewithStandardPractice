@@ -14,7 +14,7 @@ const act = 'IsActiveEntity=true'
 const newBook = { title: 'Auth Book', author_ID: A1, price: 1, stock: 1 }
 
 describe('AdminService authorization: denied users', () => {
-  describe.each([['alice', 403], ['bob', 403], ['carol', 403], [undefined, 401]])('%s -> %i', (name, code) => {
+  describe.each([['bob', 403], ['carol', 403], [undefined, 401]])('%s -> %i', (name, code) => {
     const o = () => user(name)
     const cases = {
       'GET Books': () => GET(`${base}/Books`, o()),

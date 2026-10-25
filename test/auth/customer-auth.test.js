@@ -15,7 +15,7 @@ const act = 'IsActiveEntity=true'
 const body = { name: 'X', email: 'x@example.com', userId: 'gina' }
 
 describe('CustomerService authorization: denied users', () => {
-  describe.each([['bob', 403], ['alice', 403], ['dave', 403], ['carol', 403], ['erin', 403], [undefined, 401]])('%s -> %i', (name, code) => {
+  describe.each([['bob', 403], ['dave', 403], ['carol', 403], ['erin', 403], [undefined, 401]])('%s -> %i', (name, code) => {
     const o = () => user(name)
     const cases = {
       'GET Customers': () => GET(`${cust}/Customers`, o()),
@@ -48,7 +48,7 @@ describe('CustomerService authorization: Customer gina', () => {
 })
 
 describe('AdminService.Customers authorization', () => {
-  it.each(['gina', 'hugo', 'ivy', 'alice', 'bob'])('%s is denied (403)', async n => {
+  it.each(['gina', 'hugo', 'ivy', 'bob'])('%s is denied (403)', async n => {
     expect((await GET(`${adm}/Customers`, user(n))).status).toBe(403)
   })
   it('anonymous -> 401', async () => {
