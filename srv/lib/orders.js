@@ -192,9 +192,9 @@ export async function cancelOrder (srv, req) {
 // Landing page best sellers: quantity sold per book over Placed orders (cancelled orders and drafts do not count).
 export async function bestSellers (req) {
   const query = SELECT.from('bookstore.OrderItems')
-    .columns('book.ID as ID', 'book.title as title', 'sum(quantity) as sold')
+    .columns('book.ID as ID', 'book.title as title', 'book.imageUrl as imageUrl', 'sum(quantity) as sold')
     .where({ 'order.status': 'Placed' })
-    .groupBy('book.ID', 'book.title')
+    .groupBy('book.ID', 'book.title', 'book.imageUrl')
   const { orderBy, limit } = req.query.SELECT
   query.SELECT.orderBy = orderBy ?? [{ ref: ['sold'], sort: 'desc' }]
   if (limit) query.SELECT.limit = limit

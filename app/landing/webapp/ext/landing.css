@@ -1,0 +1,15 @@
+.bookstoreCover {
+    object-fit: cover;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+}
+
+.bookstoreHero {
+    overflow: hidden;
+}
+
+.bookstoreHeroImage {
+    object-fit: cover;
+    border-radius: 0.5rem 0.5rem 0 0;
+}

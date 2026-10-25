@@ -96,6 +96,9 @@
       "css": [
         {
           "uri": "ext/discountCard/discountCard.css"
+        },
+        {
+          "uri": "ext/landing.css"
         }
       ]
     },
@@ -112,12 +115,28 @@
     "considerAnalyticalParameters": false,
     "globalFilterControlType": "MacroFilterBar",
     "cards": {
+      "hero": {
+        "model": "mainModel",
+        "template": "com.bookstore.landing.ext.heroCard",
+        "settings": {
+          "title": "{{heroTitle}}",
+          "entitySet": "StoreInfo",
+          "defaultSpan": {
+            "rows": 14,
+            "cols": 2
+          }
+        }
+      },
       "quickLinks": {
         "model": "mainModel",
         "template": "sap.ovp.cards.v4.linklist",
         "settings": {
           "title": "{{quickLinksTitle}}",
           "listFlavor": "standard",
+          "defaultSpan": {
+            "rows": 14,
+            "cols": 1
+          },
           "staticContent": [
             {
               "title": "{{browseBooksTitle}}",
@@ -173,26 +192,24 @@
       },
       "newArrivals": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.list",
+        "template": "sap.ovp.cards.v4.linklist",
         "settings": {
           "title": "{{newArrivalsTitle}}",
           "subTitle": "{{newArrivalsSubtitle}}",
+          "listFlavor": "standard",
           "entitySet": "NewArrivals",
-          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem#NewArrivals",
           "sortBy": "createdAt",
-          "sortOrder": "descending"
+          "sortOrder": "descending",
+          "headerAnnotationPath": "com.sap.vocabularies.UI.v1.HeaderInfo#NewArrivals"
         }
       },
       "bestSellers": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.list",
+        "template": "com.bookstore.landing.ext.bestSellerCard",
         "settings": {
           "title": "{{bestSellersTitle}}",
           "subTitle": "{{bestSellersSubtitle}}",
-          "entitySet": "BestSellers",
-          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem#BestSellers",
-          "sortBy": "sold",
-          "sortOrder": "descending"
+          "entitySet": "BestSellers"
         }
       }
     }

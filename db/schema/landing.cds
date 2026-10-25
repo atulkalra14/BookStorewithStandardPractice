@@ -19,6 +19,7 @@ entity StoreInfo : cuid, managed {
   phone        : String(40)  @title: '{i18n>Phone}';
   openingHours : localized String(255) @title: '{i18n>OpeningHours}';
   description  : localized String(1000) @title: '{i18n>Description}';
+  heroImageUrl : String(500) @assert.format: '^/(?!/)[\w/.-]+$' @title: '{i18n>HeroImage}';  // banner on the landing page, static image path
 }
 
 // Applies to every service entity that allows writes on Discounts (none yet: read-only landing page).

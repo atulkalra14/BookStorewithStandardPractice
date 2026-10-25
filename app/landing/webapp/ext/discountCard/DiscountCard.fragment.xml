@@ -7,7 +7,15 @@
         noDataText="{@i18n>noDiscounts}"
         items="{path: 'mainModel>/ActiveDiscounts', sorter: {path: 'percent', descending: true}}">
         <CustomListItem>
-            <VBox class="sapUiTinyMargin">
+            <HBox class="sapUiTinyMargin" alignItems="Center">
+              <Image
+                  src="{mainModel>bookImageUrl}"
+                  alt="{mainModel>bookTitle}"
+                  class="bookstoreCover sapUiSmallMarginEnd"
+                  width="3rem"
+                  height="4.5rem"
+                  visible="{= !!${mainModel>bookImageUrl}}" />
+              <VBox>
                 <Title text="{mainModel>bookTitle}" titleStyle="H5" />
                 <HBox alignItems="Center" wrap="Wrap">
                     <Text
@@ -25,7 +33,8 @@
                         inverted="true"
                         text="{= formatMessage(${@i18n>discountPercent}, [${mainModel>percent}])}" />
                 </HBox>
-            </VBox>
+              </VBox>
+            </HBox>
         </CustomListItem>
     </List>
 </core:FragmentDefinition>
