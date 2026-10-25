@@ -1,6 +1,9 @@
 # CLAUDE.md – SAP CAP (Node.js) project
 
 ## Project overview
+- Online book shopping app. Customers browse books and place orders.
+- The bookshop has an internal admin app for the Admin / shop owner: maintain books (genre, quantity/stock, author, other book info) and authors (author name).
+- Roles: Customer (browse, order) and Admin (manage books and authors). Details in `docs/`.
 - SAP Cloud Application Programming Model (CAP), Node.js runtime.
 - Local DB: SQLite (in-memory). Cloud DB: SAP HANA Cloud (HDI).
 - Target: SAP BTP, Cloud Foundry runtime (MTA deployment).
