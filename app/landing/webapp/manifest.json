@@ -140,7 +140,7 @@
               "subTitle": "{{purchaseHistorySubtitle}}",
               "imageUri": "sap-icon://history",
               "imageAltText": "{{purchaseHistoryIcon}}",
-              "targetUri": "../../com.bookstore.orders/index.html",
+              "targetUri": "../../com.bookstore.purchasehistory/index.html",
               "openInNewWindow": false
             },
             {
