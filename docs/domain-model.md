@@ -4,7 +4,7 @@
 
 | Context | File | Status |
 |---|---|---|
-| Catalog | `db/schema/catalog.cds` | Slice 1: Authors, Books (read-only API); slice 2: draft-enabled Books admin API |
+| Catalog | `db/schema/catalog.cds` | Slice 1: Authors, Books (read-only API); slice 2: draft-enabled Books admin API; slice 3: customer Fiori list report and object page `app/book-shop` on `CatalogService` |
 
 ## Glossary
 
@@ -35,6 +35,7 @@ The scope name is permanent once released. Role collections are assigned per sub
 
 ## Deferred
 
-- Genres (localized code list), Fiori list report and object page, draft for Authors, orders and stock handling.
+- Genres (localized code list), admin Fiori app on `AdminService` (draft create and edit), draft for Authors, orders and stock handling.
+- `Authors.dateOfBirth` is still readable by every `BookViewer` through `CatalogService`; decide whether to exclude it (customer app does not need it).
 - `currency` on Books: add with pricing or ordering, together with a seeded currency code list.
 - Cross-tenant isolation test: needs the mtx sidecar with two subscribed tenants (see `it.todo` in `test/tenant/`).

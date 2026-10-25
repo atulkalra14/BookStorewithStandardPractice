@@ -11,7 +11,8 @@ const alice = lang => ({ auth: { username: 'alice', password: '' }, headers: { '
 // CAP renders @title as <Annotations Target="..."><Annotation Term="Common.Label" String="..."/>
 function label(edmx, target) {
   const esc = target.replace(/[./]/g, '\\$&')
-  const m = String(edmx).match(new RegExp(`<Annotations Target="${esc}">\\s*<Annotation Term="Common.Label" String="([^"]*)"`))
+  const block = String(edmx).match(new RegExp(`<Annotations Target="${esc}">([\\s\\S]*?)</Annotations>`))
+  const m = block && block[1].match(/<Annotation Term="Common.Label" String="([^"]*)"/)
   return m && m[1]
 }
 
