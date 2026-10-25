@@ -104,6 +104,16 @@
           "pattern": "Orders({key}):?query:",
           "name": "OrdersObjectPage",
           "target": "OrdersObjectPage"
+        },
+        {
+          "pattern": "CustomerAddresses:?query:",
+          "name": "CustomerAddressesList",
+          "target": "CustomerAddressesList"
+        },
+        {
+          "pattern": "CustomerAddresses({key}):?query:",
+          "name": "CustomerAddressesObjectPage",
+          "target": "CustomerAddressesObjectPage"
         }
       ],
       "targets": {
@@ -139,7 +149,55 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Orders"
+              "contextPath": "/Orders",
+              "content": {
+                "header": {
+                  "actions": {
+                    "MyAddresses": {
+                      "press": "com.bookstore.orders.ext.Addresses.open",
+                      "visible": true,
+                      "enabled": true,
+                      "text": "{{MyAddresses}}"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "CustomerAddressesList": {
+          "type": "Component",
+          "id": "CustomerAddressesList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/CustomerAddresses",
+              "variantManagement": "Page",
+              "navigation": {
+                "CustomerAddresses": {
+                  "detail": {
+                    "route": "CustomerAddressesObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "CustomerAddressesObjectPage": {
+          "type": "Component",
+          "id": "CustomerAddressesObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "editableHeaderContent": false,
+              "contextPath": "/CustomerAddresses"
             }
           }
         }

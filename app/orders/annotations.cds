@@ -86,6 +86,26 @@ annotate service.Orders with {
         },
     );
 
+    // Saved addresses: picking one fills the whole ship-to. Typing a new address is still possible (not fixed values).
+    shipToName @(
+        Common.ValueListWithFixedValues : false,
+        Common.ValueList #SavedAddresses : {
+            $Type          : 'Common.ValueListType',
+            Label          : '{i18n>SavedAddresses}',
+            CollectionPath : 'CustomerAddresses',
+            SearchSupported : true,
+            Parameters     : [
+                { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : shipToName, ValueListProperty : 'name' },
+                { $Type : 'Common.ValueListParameterOut', LocalDataProperty : shipToStreet, ValueListProperty : 'street' },
+                { $Type : 'Common.ValueListParameterOut', LocalDataProperty : shipToZip, ValueListProperty : 'zip' },
+                { $Type : 'Common.ValueListParameterOut', LocalDataProperty : shipToCity, ValueListProperty : 'city' },
+                { $Type : 'Common.ValueListParameterOut', LocalDataProperty : shipToCountry_code, ValueListProperty : 'country_code' },
+                { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'label' },
+                { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'isDefault' },
+            ],
+        },
+    );
+
     // Postal code search help (Essen only). Picking a code also fills the city.
     shipToZip @(
         Common.ValueList : {
@@ -144,3 +164,76 @@ annotate service.Orders with @(
         TargetProperties : [ 'totalAmount' ],
     },
 );
+
+// "My Addresses": list and edit the saved ship-to addresses (second route of this app, see manifest.json).
+annotate service.CustomerAddresses with @(
+    UI.HeaderInfo : {
+        $Type          : 'UI.HeaderInfoType',
+        TypeName       : '{i18n>CustomerAddress}',
+        TypeNamePlural : '{i18n>CustomerAddresses}',
+        Title          : { $Type : 'UI.DataField', Value : name },
+        Description    : { $Type : 'UI.DataField', Value : street },
+    },
+    UI.LineItem : [
+        { $Type : 'UI.DataField', Value : label },
+        { $Type : 'UI.DataField', Value : name },
+        { $Type : 'UI.DataField', Value : street },
+        { $Type : 'UI.DataField', Value : zip },
+        { $Type : 'UI.DataField', Value : city },
+        { $Type : 'UI.DataField', Value : isDefault },
+        { $Type : 'UI.DataField', Value : lastUsedAt },
+    ],
+    UI.FieldGroup #Address : {
+        $Type : 'UI.FieldGroupType',
+        Data  : [
+            { $Type : 'UI.DataField', Value : label },
+            { $Type : 'UI.DataField', Value : name },
+            { $Type : 'UI.DataField', Value : street },
+            { $Type : 'UI.DataField', Value : zip },
+            { $Type : 'UI.DataField', Value : city },
+            { $Type : 'UI.DataField', Value : country_code },
+            { $Type : 'UI.DataField', Value : isDefault },
+        ],
+    },
+    UI.Facets : [
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'AddressFacet',
+            Label  : '{i18n>ShippingAddress}',
+            Target : '@UI.FieldGroup#Address',
+        },
+    ],
+);
+
+annotate service.CustomerAddresses with {
+    // The owner is set by the handler and never shown.
+    customer @UI.Hidden;
+
+    country @(
+        Common.Text            : country.name,
+        Common.TextArrangement : #TextFirst,
+        Common.ValueListWithFixedValues : false,
+        Common.ValueList       : {
+            $Type          : 'Common.ValueListType',
+            CollectionPath : 'Countries',
+            SearchSupported : true,
+            Parameters     : [
+                { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : country_code, ValueListProperty : 'code' },
+                { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'name' },
+            ],
+        },
+    );
+
+    zip @(
+        Common.ValueList : {
+            $Type          : 'Common.ValueListType',
+            CollectionPath : 'PostalCodes',
+            SearchSupported : true,
+            Parameters     : [
+                { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : zip, ValueListProperty : 'code' },
+                { $Type : 'Common.ValueListParameterOut', LocalDataProperty : city, ValueListProperty : 'city' },
+                { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'districts' },
+            ],
+        },
+    );
+};

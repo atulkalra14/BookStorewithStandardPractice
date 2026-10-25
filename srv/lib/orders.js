@@ -35,7 +35,7 @@ async function nextOrderNumber (now = new Date()) {
 // before NEW (draft): the cart belongs to the Customers row of the caller.
 // SECURITY NOTE: the Customers row of a first-time customer is created through the db service (no authorization),
 // because OrderService does not expose Customers for writing. Only the caller's own userId is ever used.
-export async function assignCustomer (req) {
+export async function ensureCustomer (req) {
   const userId = req.user.id
   let customer = await SELECT.one.from('bookstore.Customers').columns('ID').where({ userId })
   if (!customer) {
@@ -44,7 +44,12 @@ export async function assignCustomer (req) {
     await INSERT.into('bookstore.Customers').entries({ ID, userId, name, email: req.user.attr?.email || userId })
     customer = { ID }
   }
-  req.data.customer_ID = customer.ID
+  return customer.ID
+}
+
+export async function assignCustomer (req) {
+  req.data.ID = cds.utils.uuid()  // server-generated: a client-sent ID could squat another customer's draft ID
+  req.data.customer_ID = await ensureCustomer(req)
   req.data.currency = CURRENCY
 }
 
@@ -104,18 +109,23 @@ async function recalcDraftTotal (orderID) {
 }
 
 // Ship-to address: Germany, a postal code from PostalCodes, and the city that belongs to it (Essen).
-export async function validateAddress (req) {
-  const { shipToCountry_code: country, shipToCity: city, shipToZip: zip } = req.data
+// Shared by Orders and CustomerAddresses; targets names the fields the messages point at.
+export async function checkAddress (req, { country, city, zip }, targets) {
   if (country && country !== DELIVERY_COUNTRY) {
-    req.error({ status: 400, code: 'ERR_ORDER_COUNTRY_UNSUPPORTED', message: 'ERR_ORDER_COUNTRY_UNSUPPORTED', target: 'shipToCountry_code' })
+    req.error({ status: 400, code: 'ERR_ORDER_COUNTRY_UNSUPPORTED', message: 'ERR_ORDER_COUNTRY_UNSUPPORTED', target: targets.country })
   }
   if (!zip) return
   const postal = await SELECT.one.from('bookstore.PostalCodes').columns('city').where({ code: zip })
   if (!postal) {
-    req.error({ status: 400, code: 'ERR_ORDER_ZIP_UNKNOWN', message: 'ERR_ORDER_ZIP_UNKNOWN', target: 'shipToZip' })
+    req.error({ status: 400, code: 'ERR_ORDER_ZIP_UNKNOWN', message: 'ERR_ORDER_ZIP_UNKNOWN', target: targets.zip })
   } else if (city && city.trim().toLowerCase() !== postal.city.toLowerCase()) {
-    req.error({ status: 400, code: 'ERR_ORDER_CITY_UNSUPPORTED', message: 'ERR_ORDER_CITY_UNSUPPORTED', args: [postal.city], target: 'shipToCity' })
+    req.error({ status: 400, code: 'ERR_ORDER_CITY_UNSUPPORTED', message: 'ERR_ORDER_CITY_UNSUPPORTED', args: [postal.city], target: targets.city })
   }
+}
+
+export async function validateAddress (req) {
+  const { shipToCountry_code: country, shipToCity: city, shipToZip: zip } = req.data
+  await checkAddress(req, { country, city, zip }, { country: 'shipToCountry_code', city: 'shipToCity', zip: 'shipToZip' })
 }
 
 // before SAVE: validate the cart, snapshot prices, reserve stock and place the order.
