@@ -22,7 +22,7 @@
                     <VBox>
                         <Title text="{title}" titleStyle="H3" />
                         <Text class="sapUiTinyMarginTopBottom" text="{descr}" />
-                        <ObjectStatus state="Information" icon="sap-icon://trend-up" text="{= formatMessage(${i18n>copiesSold}, [${sold}])}" />
+                        <ObjectStatus state="Information" icon="sap-icon://trend-up" text="{= formatMessage(Number(${sold}) === 1 ? ${i18n>copySold} : ${i18n>copiesSold}, [${sold}])}" />
                     </VBox>
                 </HBox>
             </CustomListItem>

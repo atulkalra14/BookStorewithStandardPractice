@@ -50,9 +50,10 @@ describe('landing cards open their own pages', () => {
     }
   })
 
-  it('best seller card shows the sold count through the copiesSold text', () => {
-    expect(read('app/landing/webapp/ext/bestSellerCard/BestSellerCard.fragment.xml')).toContain('@i18n>copiesSold')
-    expect(read('app/landing/webapp/i18n/i18n.properties')).toMatch(/^copiesSold=\{0\} copies already sold$/m)
+  it('best seller card shows the sold count with the singular or plural unit text', () => {
+    expect(read('app/landing/webapp/ext/bestSellerCard/BestSellerCard.fragment.xml')).toContain('@i18n>copySoldUnit')
+    expect(read('app/landing/webapp/i18n/i18n.properties')).toMatch(/^copiesSoldUnit=Copies Sold$/m)
+    expect(read('app/landing/webapp/i18n/i18n.properties')).not.toMatch(/^bestSellersSubtitle=Coming soon/m)
     expect(read('app/landing/webapp/i18n/i18n.properties')).not.toMatch(/soldCount/)
   })
 

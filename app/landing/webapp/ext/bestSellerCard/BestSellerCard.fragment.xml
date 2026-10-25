@@ -2,7 +2,6 @@
     <VBox>
         <List
             id="bestSellerList"
-            core:require="{formatMessage: 'sap/base/strings/formatMessage'}"
             growing="true"
             growingThreshold="5"
             noDataText="{@i18n>noBestSellers}"
@@ -18,10 +17,11 @@
                         visible="{= !!${mainModel>imageUrl}}" />
                     <VBox>
                         <Title text="{mainModel>title}" titleStyle="H5" />
-                        <ObjectStatus
+                        <ObjectNumber
                             state="Information"
-                            icon="sap-icon://trend-up"
-                            text="{= formatMessage(${@i18n>copiesSold}, [${mainModel>sold}])}" />
+                            emphasized="true"
+                            number="{mainModel>sold}"
+                            unit="{= Number(${mainModel>sold}) === 1 ? ${@i18n>copySoldUnit} : ${@i18n>copiesSoldUnit}}" />
                     </VBox>
                 </HBox>
             </CustomListItem>

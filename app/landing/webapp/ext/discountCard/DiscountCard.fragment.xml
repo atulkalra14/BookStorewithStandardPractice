@@ -32,7 +32,8 @@
                         <ObjectStatus
                             state="Success"
                             inverted="true"
-                            text="{= '-' + ${mainModel>percent} + '%'}" />
+                            text="{= ${mainModel>percent} + '%'}" />
+                        <Text class="sapUiTinyMarginBegin" text="{@i18n>discountLabel}" />
                     </HBox>
                   </VBox>
                 </HBox>
