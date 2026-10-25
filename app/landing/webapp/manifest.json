@@ -93,7 +93,11 @@
       }
     },
     "resources": {
-      "css": []
+      "css": [
+        {
+          "uri": "ext/discountCard/discountCard.css"
+        }
+      ]
     },
     "routing": {
       "config": {},
@@ -118,8 +122,28 @@
             {
               "title": "{{browseBooksTitle}}",
               "subTitle": "{{browseBooksSubtitle}}",
+              "imageUri": "sap-icon://search",
+              "imageAltText": "{{browseBooksIcon}}",
               "targetUri": "../com.bookstore.bookshop/index.html",
               "openInNewWindow": false
+            },
+            {
+              "title": "{{orderBooksTitle}}",
+              "subTitle": "{{orderBooksSubtitle}}",
+              "imageUri": "sap-icon://cart",
+              "imageAltText": "{{orderBooksIcon}}"
+            },
+            {
+              "title": "{{purchaseHistoryTitle}}",
+              "subTitle": "{{purchaseHistorySubtitle}}",
+              "imageUri": "sap-icon://history",
+              "imageAltText": "{{purchaseHistoryIcon}}"
+            },
+            {
+              "title": "{{returnBooksTitle}}",
+              "subTitle": "{{returnBooksSubtitle}}",
+              "imageUri": "sap-icon://undo",
+              "imageAltText": "{{returnBooksIcon}}"
             }
           ]
         }
@@ -136,14 +160,11 @@
       },
       "discounts": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.list",
+        "template": "com.bookstore.landing.ext.discountCard",
         "settings": {
           "title": "{{discountsTitle}}",
           "subTitle": "{{discountsSubtitle}}",
-          "entitySet": "ActiveDiscounts",
-          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem#Discounts",
-          "sortBy": "percent",
-          "sortOrder": "descending"
+          "entitySet": "ActiveDiscounts"
         }
       },
       "newArrivals": {
