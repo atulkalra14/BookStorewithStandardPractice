@@ -14,6 +14,7 @@
   "devDependencies": {
     "@cap-js/sqlite": "^3",
     "@cap-js/cds-test": "^1",
+    "cds-plugin-ui5": "^0.17.0",
     "@sap/cds-dk": "^10",
     "eslint": "^10",
     "jest": "^30"
@@ -23,7 +24,8 @@
     "watch": "cds watch",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "lint": "eslint .",
-    "i18n:check": "node scripts/check-i18n.js --languages=en,de"
+    "i18n:check": "node scripts/check-i18n.js --languages=en,de",
+    "watch-book-shop": "cds watch --open \"com.bookstore.bookshop/index.html?sap-ui-xx-viewCache=false\" --livereload false"
   },
   "jest": {
     "testEnvironment": "node",
@@ -56,5 +58,11 @@
       }
     },
     "profile": "with-mtx-sidecar"
-  }
+  },
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/book-shop"
+  ]
 }
