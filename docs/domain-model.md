@@ -31,6 +31,7 @@
 - `CustomerService` (`/odata/v4/customer`): requires role `Customer`. `Customers` is draft-enabled; `READ` and `UPDATE` only for the own row (`userId = $user`), no create or delete. New drafts are rejected (`before NEW`, 403), `userId` cannot be changed (`ERR_CUSTOMER_USERID_IMMUTABLE`), invalid email gives `ERR_EMAIL_INVALID`. `createdBy` and `modifiedBy` are not exposed. `DraftAdministrativeData` is limited to the caller's own entries, and the draft-lock error that names the lock holder becomes a 404 `ERR_CUSTOMER_NOT_FOUND`, so customers never learn another user's ID (pinned by `test/service/customer-draft-lock-privacy.test.js`).
 
 - `LandingService` (`/odata/v4/landing`): read-only, requires `authenticated-user` (any logged-in user, also without a role; decision changed after the landing page failed to open for users without a role). Still no public endpoint (decision A2). Visible to every logged-in user: store details, discounts, new arrivals (title, price, creation date) and best sellers. `NewArrivals` shows books created in the last 30 days, `ActiveDiscounts` only discounts valid today, `StoreInfo` the store details (fake seed data in `test/data/`), `BestSellers` is an empty list until orders exist (decision B2).
+- `ActiveDiscounts` also returns `currency` (fixed `'EUR'`) and the virtual `discountedPrice` (`bookPrice` reduced by `percent`, rounded half up to cents, filled in `after READ`). The landing page quick links are Browse Books, Order Books, View Your Purchase History and Return Books; Order Books, View Your Purchase History and Return Books have no target yet (orders and returns slices). The discounts card is a custom OVP card (`app/landing/webapp/ext/discountCard`) showing the struck-through price, the new price and the percentage.
 - `Discounts` (`cuid`, `managed`) and `StoreInfo` (`cuid`, `managed`) are new tables (additive). No admin UI maintains them yet.
 
 ## Roles
@@ -50,5 +51,5 @@ The scope name is permanent once released. Role collections are assigned per sub
 - Decided in the security review: every `BookAdmin` may read customer personal data (no separate role for now; revisit with audit logging). Email format is validated only in the handler (keyed `ERR_EMAIL_INVALID`), not by `@assert.format`, so users get one translated message.
 - Genres (localized code list), admin Fiori app on `AdminService` (draft create and edit), draft for Authors, orders and stock handling.
 - `Authors.dateOfBirth` is still readable by every `BookViewer` through `CatalogService`; decide whether to exclude it (customer app does not need it).
-- `currency` on Books: add with pricing or ordering, together with a seeded currency code list.
+- `currency` on Books: the landing discount card shows a fixed EUR meanwhile; add with pricing or ordering, together with a seeded currency code list.
 - Cross-tenant isolation test: needs the mtx sidecar with two subscribed tenants (see `it.todo` in `test/tenant/`).

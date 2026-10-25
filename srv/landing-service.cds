@@ -8,10 +8,14 @@ service LandingService {
   @readonly entity NewArrivals as projection on bookstore.Books { key ID, title, price, createdAt };
 
   // Discounts whose validity window includes today: the filter is applied in the handler.
+  // discountedPrice is filled by the handler (srv/lib/landing.js): bookPrice reduced by percent, rounded to 2 decimals.
+  // currency is fixed to EUR until Books gets a currency element (see docs/domain-model.md, Deferred).
   @readonly entity ActiveDiscounts as projection on bookstore.Discounts {
     key ID, percent, validFrom, validTo, description,
     book.title as bookTitle,
-    book.price as bookPrice
+    book.price as bookPrice,
+    virtual null as discountedPrice : Decimal(9, 2),
+    'EUR' as currency : String(3)
   };
 
   @readonly entity StoreInfo as projection on bookstore.StoreInfo { key ID, name, address, phone, openingHours, description };

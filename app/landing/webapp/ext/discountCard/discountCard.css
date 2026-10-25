@@ -1,0 +1,4 @@
+.bookstoreOldPrice {
+    text-decoration: line-through;
+    color: var(--sapContent_LabelColor);
+}
