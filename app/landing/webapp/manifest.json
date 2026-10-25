@@ -166,7 +166,9 @@
               "title": "{{returnBooksTitle}}",
               "subTitle": "{{returnBooksSubtitle}}",
               "imageUri": "sap-icon://undo",
-              "imageAltText": "{{returnBooksIcon}}"
+              "imageAltText": "{{returnBooksIcon}}",
+              "targetUri": "../../com.bookstore.returns/index.html",
+              "openInNewWindow": false
             }
           ]
         }

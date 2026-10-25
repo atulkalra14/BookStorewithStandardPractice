@@ -3,5 +3,6 @@ using from './schema/catalog';
 using from './schema/customers';
 using from './schema/landing';
 using from './schema/orders';
+using from './schema/returns';
 using from './schema/addresses';
 using from '@sap/cds-common-content';
