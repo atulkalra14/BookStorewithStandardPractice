@@ -19,6 +19,18 @@ describe('landing cards open their own pages', () => {
     expect(cards[card].settings.targetUri).toContain(target)
   })
 
+  it.each([
+    ['bestSellerCard/BestSellerCard', 'com.bookstore.booklists/index.html#/best-sellers'],
+    ['discountCard/DiscountCard', 'com.bookstore.booklists/index.html#/discounts'],
+    ['newArrivalsCard/NewArrivalsCard', 'com.bookstore.booklists/index.html#/new-arrivals'],
+    ['heroCard/HeroCard', 'website/index.html'],
+    ['storeInfoCard/StoreInfoCard', 'website/about.html']
+  ])('%s has a visible link to %s (header targetUri alone does not open custom cards)', (frag, target) => {
+    const xml = read(`app/landing/webapp/ext/${frag}.fragment.xml`)
+    expect(xml).toMatch(new RegExp(`<Link[^>]*href="[^"]*${target.replace(/[.#/]/g, '\\$&')}"`))
+    expect(xml).not.toMatch(/<Link[^>]*text="[A-Za-z]/)
+  })
+
   it('every route of the book list app has a target and view', () => {
     const { routes, targets } = lists['sap.ui5'].routing
     for (const r of routes) {
