@@ -1,27 +1,30 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <List
-        id="heroList"
-        showSeparators="None"
-        noDataText="{@i18n>noStoreInfo}"
-        items="{path: 'mainModel>/StoreInfo', length: 1}">
-        <CustomListItem>
-            <VBox class="bookstoreHero">
-                <VBox class="sapUiSmallMargin">
-                    <Title text="{mainModel>name}" titleStyle="H2" />
-                    <Text text="{mainModel>description}" />
-                    <VBox class="bookstoreQuote sapUiSmallMarginTop">
-                        <Text text="{@i18n>heroWhyBooks}" />
-                    </VBox>
-                    <VBox class="bookstoreQuote sapUiSmallMarginTop">
-                        <Text class="bookstoreQuoteText" text="{@i18n>heroQuote1}" />
-                        <Text class="bookstoreQuoteAuthor" text="{@i18n>heroQuote1Author}" />
-                    </VBox>
-                    <VBox class="bookstoreQuote sapUiSmallMarginTop">
-                        <Text class="bookstoreQuoteText" text="{@i18n>heroQuote2}" />
-                        <Text class="bookstoreQuoteAuthor" text="{@i18n>heroQuote2Author}" />
+    <VBox>
+        <List
+            id="heroList"
+            showSeparators="None"
+            noDataText="{@i18n>noStoreInfo}"
+            items="{path: 'mainModel>/StoreInfo', length: 1}">
+            <CustomListItem>
+                <VBox class="bookstoreHero">
+                    <VBox class="sapUiSmallMargin">
+                        <Title text="{mainModel>name}" titleStyle="H2" />
+                        <Text text="{mainModel>description}" />
+                        <VBox class="bookstoreQuote sapUiSmallMarginTop">
+                            <Text text="{@i18n>heroWhyBooks}" />
+                        </VBox>
+                        <VBox class="bookstoreQuote sapUiSmallMarginTop">
+                            <Text class="bookstoreQuoteText" text="{@i18n>heroQuote1}" />
+                            <Text class="bookstoreQuoteAuthor" text="{@i18n>heroQuote1Author}" />
+                        </VBox>
+                        <VBox class="bookstoreQuote sapUiSmallMarginTop">
+                            <Text class="bookstoreQuoteText" text="{@i18n>heroQuote2}" />
+                            <Text class="bookstoreQuoteAuthor" text="{@i18n>heroQuote2Author}" />
+                        </VBox>
                     </VBox>
                 </VBox>
-            </VBox>
-        </CustomListItem>
-    </List>
+            </CustomListItem>
+        </List>
+        <Link class="sapUiSmallMarginBegin sapUiSmallMarginBottom" href="website/index.html" text="{@i18n>visitWebsite}" />
+    </VBox>
 </core:FragmentDefinition>

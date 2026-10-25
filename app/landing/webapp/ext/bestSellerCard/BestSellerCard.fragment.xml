@@ -1,28 +1,31 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <List
-        id="bestSellerList"
-        core:require="{formatMessage: 'sap/base/strings/formatMessage'}"
-        growing="true"
-        growingThreshold="5"
-        noDataText="{@i18n>noBestSellers}"
-        items="{path: 'mainModel>/BestSellers', length: 5, sorter: {path: 'sold', descending: true}}">
-        <CustomListItem>
-            <HBox class="sapUiTinyMargin" alignItems="Center">
-                <Image
-                    src="{mainModel>imageUrl}"
-                    alt="{mainModel>title}"
-                    class="bookstoreCover sapUiSmallMarginEnd"
-                    width="3rem"
-                    height="4.5rem"
-                    visible="{= !!${mainModel>imageUrl}}" />
-                <VBox>
-                    <Title text="{mainModel>title}" titleStyle="H5" />
-                    <ObjectStatus
-                        state="Information"
-                        icon="sap-icon://trend-up"
-                        text="{= formatMessage(${@i18n>copiesSold}, [${mainModel>sold}])}" />
-                </VBox>
-            </HBox>
-        </CustomListItem>
-    </List>
+    <VBox>
+        <List
+            id="bestSellerList"
+            core:require="{formatMessage: 'sap/base/strings/formatMessage'}"
+            growing="true"
+            growingThreshold="5"
+            noDataText="{@i18n>noBestSellers}"
+            items="{path: 'mainModel>/BestSellers', length: 5, sorter: {path: 'sold', descending: true}}">
+            <CustomListItem>
+                <HBox class="sapUiTinyMargin" alignItems="Center">
+                    <Image
+                        src="{mainModel>imageUrl}"
+                        alt="{mainModel>title}"
+                        class="bookstoreCover sapUiSmallMarginEnd"
+                        width="3rem"
+                        height="4.5rem"
+                        visible="{= !!${mainModel>imageUrl}}" />
+                    <VBox>
+                        <Title text="{mainModel>title}" titleStyle="H5" />
+                        <ObjectStatus
+                            state="Information"
+                            icon="sap-icon://trend-up"
+                            text="{= formatMessage(${@i18n>copiesSold}, [${mainModel>sold}])}" />
+                    </VBox>
+                </HBox>
+            </CustomListItem>
+        </List>
+        <Link class="sapUiSmallMarginBegin sapUiSmallMarginBottom" href="../com.bookstore.booklists/index.html#/best-sellers" text="{@i18n>showAllBestSellers}" />
+    </VBox>
 </core:FragmentDefinition>

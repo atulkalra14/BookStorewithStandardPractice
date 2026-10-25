@@ -1,40 +1,43 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <List
-        id="discountList"
-        core:require="{Currency: 'sap/ui/model/type/Currency'}"
-        growing="true"
-        growingThreshold="5"
-        noDataText="{@i18n>noDiscounts}"
-        items="{path: 'mainModel>/ActiveDiscounts', sorter: {path: 'percent', descending: true}}">
-        <CustomListItem>
-            <HBox class="sapUiTinyMargin" alignItems="Center">
-              <Image
-                  src="{mainModel>bookImageUrl}"
-                  alt="{mainModel>bookTitle}"
-                  class="bookstoreCover sapUiSmallMarginEnd"
-                  width="3rem"
-                  height="4.5rem"
-                  visible="{= !!${mainModel>bookImageUrl}}" />
-              <VBox>
-                <Title text="{mainModel>bookTitle}" titleStyle="H5" />
-                <HBox alignItems="Center" wrap="Wrap">
-                    <Text
-                        class="bookstoreOldPrice sapUiTinyMarginEnd"
-                        tooltip="{@i18n>discountOriginalPrice}"
-                        text="{parts: [{path: 'mainModel>bookPrice'}, {path: 'mainModel>currency'}], type: 'Currency', formatOptions: {currencyCode: false}}" />
-                    <ObjectNumber
-                        class="sapUiTinyMarginEnd"
-                        emphasized="true"
-                        state="Success"
-                        tooltip="{@i18n>discountNewPrice}"
-                        number="{parts: [{path: 'mainModel>discountedPrice'}, {path: 'mainModel>currency'}], type: 'Currency', formatOptions: {currencyCode: false}}" />
-                    <ObjectStatus
-                        state="Success"
-                        inverted="true"
-                        text="{= '-' + ${mainModel>percent} + '%'}" />
+    <VBox>
+        <List
+            id="discountList"
+            core:require="{Currency: 'sap/ui/model/type/Currency'}"
+            growing="true"
+            growingThreshold="5"
+            noDataText="{@i18n>noDiscounts}"
+            items="{path: 'mainModel>/ActiveDiscounts', sorter: {path: 'percent', descending: true}}">
+            <CustomListItem>
+                <HBox class="sapUiTinyMargin" alignItems="Center">
+                  <Image
+                      src="{mainModel>bookImageUrl}"
+                      alt="{mainModel>bookTitle}"
+                      class="bookstoreCover sapUiSmallMarginEnd"
+                      width="3rem"
+                      height="4.5rem"
+                      visible="{= !!${mainModel>bookImageUrl}}" />
+                  <VBox>
+                    <Title text="{mainModel>bookTitle}" titleStyle="H5" />
+                    <HBox alignItems="Center" wrap="Wrap">
+                        <Text
+                            class="bookstoreOldPrice sapUiTinyMarginEnd"
+                            tooltip="{@i18n>discountOriginalPrice}"
+                            text="{parts: [{path: 'mainModel>bookPrice'}, {path: 'mainModel>currency'}], type: 'Currency', formatOptions: {currencyCode: false}}" />
+                        <ObjectNumber
+                            class="sapUiTinyMarginEnd"
+                            emphasized="true"
+                            state="Success"
+                            tooltip="{@i18n>discountNewPrice}"
+                            number="{parts: [{path: 'mainModel>discountedPrice'}, {path: 'mainModel>currency'}], type: 'Currency', formatOptions: {currencyCode: false}}" />
+                        <ObjectStatus
+                            state="Success"
+                            inverted="true"
+                            text="{= '-' + ${mainModel>percent} + '%'}" />
+                    </HBox>
+                  </VBox>
                 </HBox>
-              </VBox>
-            </HBox>
-        </CustomListItem>
-    </List>
+            </CustomListItem>
+        </List>
+        <Link class="sapUiSmallMarginBegin sapUiSmallMarginBottom" href="../com.bookstore.booklists/index.html#/discounts" text="{@i18n>showAllDiscounts}" />
+    </VBox>
 </core:FragmentDefinition>
