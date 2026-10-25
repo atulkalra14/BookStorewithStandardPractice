@@ -29,8 +29,8 @@ describe('AdminService tenants (dave=t1, erin=t2, both BookAdmin)', () => {
     expect(e.data.value).toEqual(d.data.value)
   })
 
-  it('t1 and t2 viewers are both denied on AdminService', async () => {
-    expect((await GET(`${base}/Books`, user('alice'))).status).toBe(403)
+  it('t1 (bob, no role) and t2 (carol, viewer) are both denied on AdminService', async () => {
+    expect((await GET(`${base}/Books`, user('bob'))).status).toBe(403)
     expect((await GET(`${base}/Books`, user('carol'))).status).toBe(403)
   })
 

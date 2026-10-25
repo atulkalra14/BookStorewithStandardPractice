@@ -1,7 +1,7 @@
 using { bookstore } from '../db';
 
-// Read-only content for the customer landing page. Any logged-in user may read it, also users without a role:
-// a new user has to see the page to register. No public (logged-out) access.
+// Read-only content for the customer landing page. Any logged-in user may read it, also users without a role.
+// No public (logged-out) access.
 @requires: 'authenticated-user'
 service LandingService {
   // Books added in the last 30 days: the filter is applied in the handler (srv/lib/landing.js).

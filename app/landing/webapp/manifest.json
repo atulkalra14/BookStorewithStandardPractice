@@ -23,14 +23,6 @@
           "annotations": [],
           "odataVersion": "4.0"
         }
-      },
-      "registrationService": {
-        "uri": "/odata/v4/registration/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "odataVersion": "4.0"
-        }
       }
     }
   },
@@ -88,13 +80,6 @@
           "earlyRequests": true
         }
       },
-      "registrationModel": {
-        "dataSource": "registrationService",
-        "settings": {
-          "operationMode": "Server",
-          "autoExpandSelect": true
-        }
-      },
       "@i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "uri": "i18n/i18n.properties",
@@ -137,14 +122,6 @@
               "openInNewWindow": false
             }
           ]
-        }
-      },
-      "registration": {
-        "model": "mainModel",
-        "template": "com.bookstore.landing.ext.registrationCard",
-        "settings": {
-          "title": "{{registerCardTitle}}",
-          "subTitle": "{{registerCardSubtitle}}"
         }
       },
       "storeInfo": {
