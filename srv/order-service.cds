@@ -9,11 +9,21 @@ service OrderService {
     // The handler reads the order through this service, so the READ rule above makes foreign orders invisible (404).
     { grant: 'cancel', to: 'Customer' }
   ]
-  entity Orders as projection on bookstore.Orders excluding { createdBy, modifiedBy }
+  entity Orders as projection on bookstore.Orders {
+    *,
+    // True only for a cart (a draft row, no status yet). Active rows are Placed or Cancelled and always immutable on the
+    // server (srv/lib/orders.js), so the UI greys out Edit (draftEdit below) and Delete (app/orders/annotations.cds).
+    case when status is null then true else false end as isEditable : Boolean @UI.Hidden
+  } excluding { createdBy, modifiedBy }
     actions {
       // Cancels a placed order and returns its items to stock.
       @Core.OperationAvailable: ( :in.status = 'Placed' )
       action cancel(in: $self) returns Orders;
+
+      // The standard draft Edit action, declared here only to attach its availability: Fiori elements enables the Edit
+      // button of a draft root page from this condition, not from Capabilities.UpdateRestrictions.
+      @Core.OperationAvailable: ( :in.isEditable )
+      action draftEdit(in: $self, PreserveChanges: Boolean) returns Orders;
     };
 
   @restrict: [{ grant: ['READ', 'CREATE', 'UPDATE', 'DELETE'], to: 'Customer', where: 'order.customer.userId = $user' }]
