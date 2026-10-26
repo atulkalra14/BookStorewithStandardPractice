@@ -23,6 +23,7 @@ annotate service.Returns with @(
         { $Type : 'UI.DataField', Value : requestedAt },
         { $Type : 'UI.DataField', Value : status },
         { $Type : 'UI.DataField', Value : refundAmount },
+        { $Type : 'UI.DataField', Value : decisionReason },
         { $Type : 'UI.DataFieldForAction', Action : 'ReturnService.cancel', Label : '{i18n>CancelReturn}', InvocationGrouping : #Isolated },
     ],
     UI.HeaderFacets : [
@@ -46,14 +47,31 @@ annotate service.Returns with @(
             { $Type : 'UI.DataField', Value : comment },
         ],
     },
+    // The shop's reason for approving, rejecting or cancelling the return (AdminService actions); hidden until the shop has
+    // decided (an approval may come without a reason, so decidedAt is the test). A new request has no decision yet.
+    UI.FieldGroup #ShopDecision : {
+        $Type : 'UI.FieldGroupType',
+        Data  : [
+            { $Type : 'UI.DataField', Value : decisionReason },
+            { $Type : 'UI.DataField', Value : decidedAt },
+        ],
+    },
     UI.Facets : [
         { $Type : 'UI.ReferenceFacet', ID : 'DetailsFacet', Label : '{i18n>ReturnDetails}', Target : '@UI.FieldGroup#Details' },
         { $Type : 'UI.ReferenceFacet', ID : 'ItemsFacet', Label : '{i18n>ReturnedBooks}', Target : 'items/@UI.LineItem' },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'ShopDecisionFacet',
+            Label  : '{i18n>ShopDecision}',
+            Target : '@UI.FieldGroup#ShopDecision',
+            ![@UI.Hidden] : (decidedAt is null),
+        },
     ],
 );
 
 annotate service.Returns with {
     refundAmount @Measures.ISOCurrency : currency;
+    decisionReason @UI.MultiLineText;
 
     // Only delivered, not cancelled orders of the caller are offered. The return window is checked on submission.
     order @(

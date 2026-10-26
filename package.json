@@ -36,7 +36,8 @@
     "watch-book-admin": "cds watch --open com.bookstore.bookadmin/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-book-admin-books": "cds watch --open com.bookstore.bookadminbooks/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-book-admin-authors": "cds watch --open com.bookstore.bookadminauthors/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "watch-book-admin-orders": "cds watch --open com.bookstore.bookadminorders/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-book-admin-orders": "cds watch --open com.bookstore.bookadminorders/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-book-admin-returns": "cds watch --open com.bookstore.bookadminreturns/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "jest": {
     "testEnvironment": "node",
@@ -134,6 +135,7 @@
     "app/book-admin",
     "app/book-admin-books",
     "app/book-admin-authors",
-    "app/book-admin-orders"
+    "app/book-admin-orders",
+    "app/book-admin-returns"
   ]
 }
