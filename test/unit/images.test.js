@@ -16,7 +16,7 @@ const toFile = url => path.join(root, 'app/landing/webapp', url.replace('/com.bo
 describe('seeded image paths', () => {
   it.each([
     ['test/data/bookstore-Books.csv', 'imageUrl'],
-    ['test/data/bookstore-StoreInfo.csv', 'heroImageUrl']
+    ['db/data/bookstore-StoreInfo.csv', 'heroImageUrl']
   ])('%s %s points at existing files', (file, col) => {
     const urls = csvColumn(file, col)
     expect(urls.length).toBeGreaterThan(0)
