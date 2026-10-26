@@ -22,6 +22,16 @@ describe('PurchaseHistoryService tenants (gina = t1 Customer, ivy = t2 Customer)
     expect((await t.GET(`${ph}/Orders(${placed})`, user('ivy'))).status).toBe(404)
   })
 
+  it('ivy (t2) cannot read items or invoice of a gina (t1) order', async () => {
+    const placed = await api.place(user('gina'), [{ book_ID: B1, quantity: 1 }])
+    const items = await t.GET(`${ph}/Items`, user('ivy'))
+    expect(items.status).toBe(200)
+    expect(items.data.value).toEqual([])
+    expect((await t.GET(`${ph}/Orders(${placed})/PurchaseHistoryService.invoice()`, user('ivy'))).status).toBe(404)
+    // gina herself can invoice it
+    expect((await t.GET(`${ph}/Orders(${placed})/PurchaseHistoryService.invoice()`, user('gina'))).status).toBe(200)
+  })
+
   it('carol (t2, no Customer role) is denied', async () => {
     expect((await t.GET(`${ph}/Orders`, user('carol'))).status).toBe(403)
   })

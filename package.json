@@ -10,7 +10,8 @@
     "@sap/cds": "^10",
     "@sap/cds-common-content": "^3.2.0",
     "@sap/cds-mtxs": "^4",
-    "@sap/xssec": "^4"
+    "@sap/xssec": "^4",
+    "pdfkit": "^0.20.2"
   },
   "devDependencies": {
     "@cap-js/cds-test": "^1",

@@ -99,6 +99,11 @@
           "pattern": ":?query:",
           "name": "OrdersList",
           "target": "OrdersList"
+        },
+        {
+          "name": "OrdersObjectPage",
+          "pattern": "Orders({OrdersKey}):?query:",
+          "target": "OrdersObjectPage"
         }
       ],
       "targets": {
@@ -113,10 +118,55 @@
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "selectionMode": "Single"
+                  },
+                  "actions": {
+                    "DownloadInvoice": {
+                      "press": "com.bookstore.purchasehistory.ext.invoice.Invoice.downloadSelected",
+                      "text": "{i18n>DownloadInvoice}",
+                      "requiresSelection": true
+                    }
+                  }
+                }
+              },
+              "navigation": {
+                "Orders": {
+                  "detail": {
+                    "route": "OrdersObjectPage"
+                  }
+                }
+              },
+              "enhanceI18n": "i18n/i18n.properties"
+            }
+          }
+        },
+        "OrdersObjectPage": {
+          "type": "Component",
+          "id": "OrdersObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/Orders",
+              "content": {
+                "header": {
+                  "actions": {
+                    "DownloadInvoice": {
+                      "press": "com.bookstore.purchasehistory.ext.invoice.Invoice.downloadCurrent",
+                      "text": "{i18n>DownloadInvoice}"
+                    }
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "items/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
                     "type": "ResponsiveTable"
                   }
                 }
-              }
+              },
+              "enhanceI18n": "i18n/i18n.properties"
             }
           }
         }
