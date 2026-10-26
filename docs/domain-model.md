@@ -30,7 +30,7 @@
 
 - `CatalogService` (`/odata/v4/catalog`): read-only, requires role `BookViewer`. Audit fields `createdBy` and `modifiedBy` are not exposed (user IDs are personal data).
 
-- `AdminService` (`/odata/v4/admin`): requires role `BookAdmin`. `Books` is draft-enabled with full CRUD; `Authors` is read-only (value help). `createdBy` and `modifiedBy` are not exposed, but draft administrative data (`DraftAdministrativeData`) shows the lock holder's user ID to other `BookAdmin` users of the same tenant, and the lock error names that user. Accepted decision: standard CAP behaviour that Fiori needs for the lock indicator; user IDs may be personal data, so only `BookAdmin` can see them (pinned by a test). Granting `BookAdmin` alone does not give access to `CatalogService`. `Customers` is exposed read-only to `BookAdmin` (names and emails are personal data; accepted exposure for the shop owner).
+- `AdminService` (`/odata/v4/admin`): requires role `BookAdmin`. `Books` and `Authors` are draft-enabled with full CRUD (`BookAdmin` only); an author that still has active books cannot be deleted (`ERR_AUTHOR_HAS_BOOKS`, handler `srv/admin-service.js`, logic `srv/lib/authors.js`). `createdBy` and `modifiedBy` are not exposed, but draft administrative data (`DraftAdministrativeData`) shows the lock holder's user ID to other `BookAdmin` users of the same tenant, and the lock error names that user. Accepted decision: standard CAP behaviour that Fiori needs for the lock indicator; user IDs may be personal data, so only `BookAdmin` can see them (pinned by a test). Granting `BookAdmin` alone does not give access to `CatalogService`. `Customers` is exposed read-only to `BookAdmin` (names and emails are personal data; accepted exposure for the shop owner).
 
 - `CustomerService` (`/odata/v4/customer`): requires role `Customer`. `Customers` is draft-enabled; `READ` and `UPDATE` only for the own row (`userId = $user`), no create or delete. New drafts are rejected (`before NEW`, 403), `userId` cannot be changed (`ERR_CUSTOMER_USERID_IMMUTABLE`), invalid email gives `ERR_EMAIL_INVALID`. `createdBy` and `modifiedBy` are not exposed. `DraftAdministrativeData` is limited to the caller's own entries, and the draft-lock error that names the lock holder becomes a 404 `ERR_CUSTOMER_NOT_FOUND`, so customers never learn another user's ID (pinned by `test/service/customer-draft-lock-privacy.test.js`).
 
@@ -77,14 +77,15 @@
 - `LandingService.isBookAdmin()` (unbound function, `authenticated-user`): true when the caller holds `BookAdmin`. It answers only about the caller's own roles and exists only to show or hide the tile; `AdminService` enforces the role.
 - The landing Quick Links card is a custom card (`app/landing/webapp/ext/quickLinksCard`) because static OVP link-list items have no visibility setting. It lists the customer links and, below an "Admin" header, the admin app links (now Manage Books), shown only when `isBookAdmin()` is true. Non-admins see the customer links only, with no empty card.
 - `app/book-admin` (`com.bookstore.bookadmin`): hub page with one tile per admin app (Books only); the landing page links straight to the admin apps, so the hub is currently not linked. `app/book-admin-books` (`com.bookstore.bookadminbooks`): list report and object page on `AdminService.Books` (create, edit, delete, drafts).
-- Deferred: Authors app, Orders & Returns review app, deployment routes for the new apps in `mta.yaml`/approuter, tenant isolation tests (need the mtx sidecar), manual browser check. German texts are drafted and need native review.
+- `app/book-admin-authors` (`com.bookstore.bookadminauthors`, admin slice 2): list report and object page on `AdminService.Authors` with a read-only table of the author's books; the Quick Links card has a "Manage Authors" link for admins (card height raised to 34 rows so all links fit). A book cannot be activated for an author that no longer exists (`ERR_BOOK_AUTHOR_NOT_FOUND`, `before SAVE` on `Books`): this closes the gap that the delete check only sees active books. A delete racing an activation can still slip through; only a database foreign key would close that (not configured, decide with the next schema review).
+- Deferred: Orders & Returns review app, deployment routes for the new apps in `mta.yaml`/approuter, tenant isolation tests (need the mtx sidecar), manual browser check. German texts are drafted and need native review.
 
 ## Roles
 
 | Role | Scope | Grants |
 |---|---|---|
 | `BookViewer` | `$XSAPPNAME.BookViewer` | Read the catalog |
-| `BookAdmin` | `$XSAPPNAME.BookAdmin` | Create, edit (draft) and delete books; read authors and customers |
+| `BookAdmin` | `$XSAPPNAME.BookAdmin` | Create, edit (draft) and delete books and authors; read customers |
 | `Customer` | `$XSAPPNAME.Customer` | Read and edit the own customer profile; create, read and cancel the own orders; request, read and cancel the own returns |
 
 The scope name is permanent once released. Role collections are assigned per subaccount at deployment time (not in `xs-security.json`).
