@@ -1,0 +1,28 @@
+{
+  "generationParameters": {
+    "generationDate": "Mon Oct 26 2026 02:03:37 GMT+0100 (Central European Standard Time)",
+    "generatorPlatform": "CLI",
+    "serviceType": "Local CAP",
+    "metadataFilename": "",
+    "serviceUrl": "http://localhost:4004/odata/v4/admin/",
+    "appName": "book-admin-books",
+    "appTitle": "Manage Books",
+    "appDescription": "Maintain books: create, edit and delete",
+    "appNamespace": "com.bookstore",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.153.0",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.33.0",
+    "template": "List Report Page V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "Books"
+      }
+    ],
+    "launchText": "To launch the generated app, start your CAP project:  and navigate to the following location in your browser:\n\nhttp://localhost:4004/book-admin-books/webapp/index.html"
+  }
+}

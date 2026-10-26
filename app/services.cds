@@ -8,3 +8,5 @@ using from './orders/annotations';
 using from './purchase-history/annotations';
 
 using from './returns/annotations';
+
+using from './book-admin-books/annotations';

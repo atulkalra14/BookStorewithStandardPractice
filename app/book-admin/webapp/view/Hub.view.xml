@@ -1,0 +1,16 @@
+<mvc:View controllerName="com.bookstore.bookadmin.controller.Hub"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+        <!-- One tile per admin app. Authors and Orders & Returns are added with their own slices. -->
+        <HBox class="sapUiMediumMargin" wrap="Wrap">
+            <GenericTile id="booksTile" class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                header="{i18n>booksTileTitle}" subheader="{i18n>booksTileSubtitle}"
+                press=".onOpenBooks">
+                <TileContent>
+                    <ImageContent src="sap-icon://course-book" />
+                </TileContent>
+            </GenericTile>
+        </HBox>
+    </Page>
+</mvc:View>

@@ -72,6 +72,13 @@
 - UI (`app/orders`): the ship-to name has a "Saved Addresses" value help that fills the whole address (typing a new one still works); the header action "My Addresses" on the order object page opens a second list report and object page for managing them (hash `#CustomerAddresses`). Not checked in a browser yet.
 - Known limits: the lock-holder error of an address draft inside `$batch` reads "Order not found" (no user ID leaks); no unique label per customer; real cross-tenant test needs the sidecar (`it.todo`); verified on SQLite only.
 
+## Book Admin tile (admin slice 1)
+
+- `LandingService.isBookAdmin()` (unbound function, `authenticated-user`): true when the caller holds `BookAdmin`. It answers only about the caller's own roles and exists only to show or hide the tile; `AdminService` enforces the role.
+- Landing card `bookAdmin` (`app/landing/webapp/ext/bookAdminCard`) shows a "Book Admin" tile to `BookAdmin` users. OVP offers no documented way to hide a card by role, so non-admins still get an empty card shell (open risk, check in a browser).
+- `app/book-admin` (`com.bookstore.bookadmin`): hub page with one tile per admin app; only Books exists so far. `app/book-admin-books` (`com.bookstore.bookadminbooks`): list report and object page on `AdminService.Books` (create, edit, delete, drafts).
+- Deferred: Authors app, Orders & Returns review app, deployment routes for the new apps in `mta.yaml`/approuter, tenant isolation tests (need the mtx sidecar), manual browser check. German texts are drafted and need native review.
+
 ## Roles
 
 | Role | Scope | Grants |
