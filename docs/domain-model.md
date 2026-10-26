@@ -22,7 +22,8 @@
 ## Entities (namespace `bookstore`)
 
 - `Authors` (`cuid`, `managed`): `name` (mandatory), `dateOfBirth`; back-link `books`.
-- `Books` (`cuid`, `managed`): `title` and `author` (mandatory), `price` (0 to 999999.99), `stock` (0 to 999999), optional `imageUrl` (path to a static cover image, for example `/com.bookstore.landing/images/covers/cover-1.svg`; admins maintain it through `AdminService`).
+- `Genres` (`CodeList`, key `code`, slice 10): reference data in `db/data/bookstore-Genres.csv` (10 genres: Fiction, NonFiction, MysteryThriller, SciFiFantasy, Romance, Biography, History, ScienceTech, Children, SelfHelp), German names in `bookstore-Genres.texts.csv` (drafted, need native review). Read-only value help in `CatalogService` (`BookViewer`) and `AdminService` (`BookAdmin`); not draft-enabled because users never edit it.
+- `Books` (`cuid`, `managed`): `title` and `author` (mandatory), optional `genre` (one `Genres` entry, checked with `@assert.target` on activation of a draft (400, target `genre_code`); existing books have none, so the column is additive and nullable. `@assert.target` validates input written through a service only: it does not cover seed CSVs or direct database writes, and it is not a database foreign key. Genre codes are never removed from `db/data/bookstore-Genres.csv`, only added, because a removed code would orphan `Books.genre_code` in every tenant), `price` (0 to 999999.99), `stock` (0 to 999999), optional `imageUrl` (path to a static cover image, for example `/com.bookstore.landing/images/covers/cover-1.svg`; admins maintain it through `AdminService`).
 - `Customers` (`cuid`, `managed`): `name`, `email` (format checked in the handler) and `userId` (all mandatory; `userId` unique). Annotated `@PersonalData` (`DataSubject`). Rows are provisioned outside the customer service (seed data only for now; the registration action was removed, row creation is decided with the orders slice). Role collections (including `Customer`) are assigned per subaccount, outside the app.
 
 ## Services
@@ -86,7 +87,7 @@ The scope name is permanent once released. Role collections are assigned per sub
 - Customer provisioning: no flow creates `Customers` rows after the removal of registration (seed data only). Orders auto-create the row on the first cart (see Orders); the `Customer` role still has to be assigned per subaccount.
 - Landing page content: no admin app maintains `Discounts` and `StoreInfo` (seed data only; `StoreInfo` is expected to hold one record per tenant, not enforced). "Today" for discounts and the 30-day new-arrival window use UTC, not the store's time zone. `Discounts.validTo >= validFrom` is declared with `@assert` (`ERR_DISCOUNT_RANGE`) but only takes effect once a service allows writes.
 - Decided in the security review: every `BookAdmin` may read customer personal data (no separate role for now; revisit with audit logging). Email format is validated only in the handler (keyed `ERR_EMAIL_INVALID`), not by `@assert.format`, so users get one translated message.
-- Genres (localized code list), admin Fiori app on `AdminService` (draft create and edit), draft for Authors.
+- Several genres per book (join entity), a genre filter on the landing page, admin Fiori app on `AdminService` (draft create and edit), draft for Authors.
 - `Authors.dateOfBirth` is still readable by every `BookViewer` through `CatalogService`; decide whether to exclude it (customer app does not need it).
 - `currency` on Books: the landing discount card shows a fixed EUR meanwhile; add with pricing or ordering, together with a seeded currency code list.
 - Cross-tenant isolation test: needs the mtx sidecar with two subscribed tenants (see `it.todo` in `test/tenant/`).

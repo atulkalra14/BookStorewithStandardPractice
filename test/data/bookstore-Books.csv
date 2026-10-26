@@ -1,4 +1,4 @@
-ID,title,descr,author_ID,price,stock,imageUrl
-b1111111-1111-4111-8111-111111111111,Test Book One,"A gripping tale of ambition and loss that keeps you turning pages late into the night.",a1111111-1111-4111-8111-111111111111,9.99,10,/com.bookstore.landing/images/covers/cover-1.svg
-b2222222-2222-4222-8222-222222222222,Test Book Two,"A warm and witty collection of stories about friendship, travel and second chances.",a1111111-1111-4111-8111-111111111111,19.50,0,/com.bookstore.landing/images/covers/cover-2.svg
-b3333333-3333-4333-8333-333333333333,Test Book Three,"A practical, beautifully written guide to thinking clearly and living with curiosity.",a2222222-2222-4222-8222-222222222222,14.00,5,/com.bookstore.landing/images/covers/cover-3.svg
+ID,title,descr,author_ID,price,stock,imageUrl,genre_code
+b1111111-1111-4111-8111-111111111111,Test Book One,A gripping tale of ambition and loss that keeps you turning pages late into the night.,a1111111-1111-4111-8111-111111111111,9.99,10,/com.bookstore.landing/images/covers/cover-1.svg,Fiction
+b2222222-2222-4222-8222-222222222222,Test Book Two,"A warm and witty collection of stories about friendship, travel and second chances.",a1111111-1111-4111-8111-111111111111,19.50,0,/com.bookstore.landing/images/covers/cover-2.svg,Romance
+b3333333-3333-4333-8333-333333333333,Test Book Three,"A practical, beautifully written guide to thinking clearly and living with curiosity.",a2222222-2222-4222-8222-222222222222,14.00,5,/com.bookstore.landing/images/covers/cover-3.svg,NonFiction
