@@ -238,7 +238,7 @@ annotate service.CustomerAddresses with {
     );
 };
 
-// Placed and cancelled orders are immutable (srv/lib/orders.js): grey out Delete for them. isEditable is true only for a cart
+// Active orders (placed, accepted, rejected, cancelled) are immutable (srv/lib/orders.js): grey out Delete for them. isEditable is true only for a cart
 // (a draft row, status null); the server rejects edit and delete of active rows regardless. UpdateRestrictions only
 // takes effect on sub-object pages: the Edit button of this page is controlled by draftEdit (see srv/order-service.cds).
 annotate service.Orders with @(

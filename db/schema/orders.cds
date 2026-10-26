@@ -4,8 +4,12 @@ using { bookstore.Customers } from './customers';
 
 namespace bookstore;
 
+// Placed -> Accepted or Rejected (shop decision, AdminService); Placed or Accepted -> Cancelled (customer while Placed,
+// shop until delivery). Rejected and Cancelled orders have given their stock back.
 type OrderStatus : String(10) enum {
   Placed;
+  Accepted;
+  Rejected;
   Cancelled;
 }
 
@@ -19,6 +23,8 @@ entity Orders : cuid, managed {
   currency     : String(3)      @readonly @title: '{i18n>Currency}';     // fixed 'EUR' until Books gets a currency
   placedAt     : Timestamp      @readonly @title: '{i18n>PlacedAt}';
   deliveredAt  : Timestamp      @readonly @title: '{i18n>DeliveredAt}';  // set by seed data only until a fulfilment slice exists; starts the return window
+  decisionReason: String(500)   @readonly @title: '{i18n>DecisionReason}';  // shop's reason, shown to the customer; set by the admin actions
+  decidedAt    : Timestamp      @readonly @title: '{i18n>DecidedAt}';       // when the shop accepted, rejected or cancelled
   shipToName   : String(111)    @mandatory @title: '{i18n>ShipToName}';
   shipToStreet : String(111)    @mandatory @title: '{i18n>ShipToStreet}';
   shipToCity   : String(60)     @mandatory @title: '{i18n>ShipToCity}';   // Essen only for now, checked in srv/lib/orders.js

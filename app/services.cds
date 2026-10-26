@@ -12,3 +12,5 @@ using from './returns/annotations';
 using from './book-admin-books/annotations';
 
 using from './book-admin-authors/annotations';
+
+using from './book-admin-orders/annotations';

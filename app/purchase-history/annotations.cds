@@ -16,6 +16,7 @@ annotate service.Orders with @(
         { $Type : 'UI.DataField', Value : placedAt },
         { $Type : 'UI.DataField', Value : status },
         { $Type : 'UI.DataField', Value : totalAmount },
+        { $Type : 'UI.DataField', Value : decisionReason },
     ],
     UI.HeaderInfo : {
         $Type          : 'UI.HeaderInfoType',
@@ -46,9 +47,24 @@ annotate service.Orders with @(
             { $Type : 'UI.DataField', Value : shipToCountry_code },
         ],
     },
+    // The shop's reason for rejecting, accepting or cancelling the order (AdminService actions); hidden until the shop has decided (an accept may come without a reason, so decidedAt is the test).
+    UI.FieldGroup #ShopDecision : {
+        $Type : 'UI.FieldGroupType',
+        Data  : [
+            { $Type : 'UI.DataField', Value : decisionReason },
+            { $Type : 'UI.DataField', Value : decidedAt },
+        ],
+    },
     UI.Facets : [
         { $Type : 'UI.ReferenceFacet', Label : '{i18n>OrderItems}', ID : 'ItemsFacet', Target : 'items/@UI.LineItem' },
         { $Type : 'UI.ReferenceFacet', Label : '{i18n>ShipTo}', ID : 'ShipToFacet', Target : '@UI.FieldGroup#ShipTo' },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>ShopDecision}',
+            ID     : 'ShopDecisionFacet',
+            Target : '@UI.FieldGroup#ShopDecision',
+            ![@UI.Hidden] : (decidedAt is null),
+        },
     ],
 );
 
@@ -70,4 +86,5 @@ annotate service.Items with {
 annotate service.Orders with {
     totalAmount @Measures.ISOCurrency : currency;
     shipToCountry_code @title : '{i18n>ShipToCountry}';
+    decisionReason @UI.MultiLineText;
 };

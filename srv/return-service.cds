@@ -23,14 +23,14 @@ service ReturnService {
     *, orderItem.book.title as bookTitle
   };
 
-  // Value help: delivered orders of the caller that were not cancelled. The return window is checked in the handler.
+  // Value help: delivered orders of the caller that were not cancelled or rejected. The return window is checked in the handler.
   // ownerId only restricts rows; exposing the customer association would auto-expose Customers.
   @readonly
   @restrict: [{ grant: 'READ', to: 'Customer', where: 'ownerId = $user' }]
   entity Orders as projection on bookstore.Orders {
     key ID, orderNumber, placedAt, deliveredAt, totalAmount, currency,
     customer.userId as ownerId @UI.Hidden @PersonalData.IsPotentiallyPersonal
-  } where status = 'Placed' and deliveredAt is not null;
+  } where status in ('Placed', 'Accepted') and deliveredAt is not null;
 
   // Target of Returns.order: every order of the caller, whatever its state now, so that the order number stays readable
   // on a submitted return after the order was cancelled. Orders (above) is only the filtered value help.

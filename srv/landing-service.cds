@@ -26,7 +26,7 @@ service LandingService {
 
   @readonly entity StoreInfo as projection on bookstore.StoreInfo { key ID, name, address, phone, openingHours, description, heroImageUrl };
 
-  // Quantity sold per book over Placed orders, computed by the handler (srv/lib/orders.js). Aggregates only, no customer data.
+  // Quantity sold per book over Placed and Accepted orders, computed by the handler (srv/lib/orders.js). Aggregates only, no customer data.
   @readonly @cds.persistence.skip
   entity BestSellers {
     key ID       : UUID;

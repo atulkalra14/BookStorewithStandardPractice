@@ -23,7 +23,7 @@ entity ReturnReasons : CodeList {
 // A Return is edited as a draft (the request) until it is activated; activation submits the request.
 entity Returns : cuid, managed {
   returnNumber : String(20)     @readonly @title: '{i18n>ReturnNumber}';  // RET-<year>-<6 digits>, generated on submission in srv/lib/returns.js
-  order        : Association to Orders    @mandatory @title: '{i18n>Order}';  // a delivered, not cancelled order of the caller within the return window
+  order        : Association to Orders    @mandatory @title: '{i18n>Order}';  // a delivered, not cancelled or rejected order of the caller within the return window
   customer     : Association to Customers @readonly @title: '{i18n>Customer}';
   status       : ReturnStatus   @readonly @title: '{i18n>ReturnStatus}';
   comment      : String(500)    @title: '{i18n>ReturnComment}';

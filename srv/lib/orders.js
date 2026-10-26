@@ -183,6 +183,14 @@ export function rejectDelete (req) {
   return req.reject(400, 'ERR_ORDER_NOT_DELETABLE')
 }
 
+// Gives the items of an order back to stock (cancel, reject). Callers have already won the conditional status update.
+export async function restoreStock (orderID) {
+  const items = await SELECT.from('bookstore.OrderItems').columns('book_ID', 'quantity').where({ order_ID: orderID })
+  for (const item of items) {
+    await UPDATE('bookstore.Books').set({ stock: { '+=': item.quantity } }).where({ ID: item.book_ID })
+  }
+}
+
 // Bound action: cancel a placed order and return its items to stock.
 // The instance check goes through the service read (srv.run), so another customer's order is simply not found (404).
 export async function cancelOrder (srv, req) {
@@ -192,18 +200,15 @@ export async function cancelOrder (srv, req) {
   // Conditional update first: of two concurrent cancels only one wins, so stock is restored once.
   const cancelled = await UPDATE('bookstore.Orders').set({ status: 'Cancelled' }).where({ ID: order.ID, status: 'Placed' })
   if (!cancelled) return req.reject(400, 'ERR_ORDER_NOT_CANCELLABLE')
-  const items = await SELECT.from('bookstore.OrderItems').columns('book_ID', 'quantity').where({ order_ID: order.ID })
-  for (const item of items) {
-    await UPDATE('bookstore.Books').set({ stock: { '+=': item.quantity } }).where({ ID: item.book_ID })
-  }
+  await restoreStock(order.ID)
   return srv.run(SELECT.one.from(req.subject))
 }
 
-// Landing page best sellers: quantity sold per book over Placed orders (cancelled orders and drafts do not count).
+// Landing page best sellers: quantity sold per book over Placed and Accepted orders (cancelled and rejected orders and drafts do not count).
 export async function bestSellers (req) {
   const query = SELECT.from('bookstore.OrderItems')
     .columns('book.ID as ID', 'book.title as title', 'book.imageUrl as imageUrl', 'sum(quantity) as sold')
-    .where({ 'order.status': 'Placed' })
+    .where({ 'order.status': { in: ['Placed', 'Accepted'] } })
     .groupBy('book.ID', 'book.title', 'book.imageUrl')
   const { orderBy, limit } = req.query.SELECT
   query.SELECT.orderBy = orderBy ?? [{ ref: ['sold'], sort: 'desc' }]

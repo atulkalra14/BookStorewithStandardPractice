@@ -27,25 +27,26 @@ describe('quickLinks card', () => {
     expect(card().template).toBe('com.bookstore.landing.ext.quickLinksCard')
     expect(card().settings.title).toBe('{{quickLinksTitle}}')
   })
-  it('lists the 4 customer links in the agreed order, then the Books and Authors admin links', () => {
-    expect(links().map(l => l.title)).toEqual(['browseBooksTitle', 'orderBooksTitle', 'purchaseHistoryTitle', 'returnBooksTitle', 'adminBooksTitle', 'adminAuthorsTitle'])
+  it('lists the 4 customer links in the agreed order, then the Books, Authors and Orders admin links', () => {
+    expect(links().map(l => l.title)).toEqual(['browseBooksTitle', 'orderBooksTitle', 'purchaseHistoryTitle', 'returnBooksTitle', 'adminBooksTitle', 'adminAuthorsTitle', 'adminOrdersTitle'])
   })
   it('subtitles use matching i18n keys', () => {
-    expect(links().map(l => l.subtitle)).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle', 'adminBooksSubtitle', 'adminAuthorsSubtitle'])
+    expect(links().map(l => l.subtitle)).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle', 'adminBooksSubtitle', 'adminAuthorsSubtitle', 'adminOrdersSubtitle'])
   })
   // '../../' reaches the site root both when index.html is opened directly and in the Fiori launchpad sandbox.
-  it('links target the book shop, orders, purchase-history, returns and the Books and Authors admin apps', () => {
+  it('links target the book shop, orders, purchase-history, returns and the Books, Authors and Orders admin apps', () => {
     expect(links().map(l => l.target)).toEqual([
       '../../com.bookstore.bookshop/index.html',
       '../../com.bookstore.orders/index.html',
       '../../com.bookstore.purchasehistory/index.html',
       '../../com.bookstore.returns/index.html',
       '../../com.bookstore.bookadminbooks/index.html',
-      '../../com.bookstore.bookadminauthors/index.html'
+      '../../com.bookstore.bookadminauthors/index.html',
+      '../../com.bookstore.bookadminorders/index.html'
     ])
   })
   it('only the admin links and their header are bound to isBookAdmin; customer links are always visible', () => {
-    expect(links().map(l => l.adminOnly)).toEqual([false, false, false, false, true, true])
+    expect(links().map(l => l.adminOnly)).toEqual([false, false, false, false, true, true, true])
     expect(/<GroupHeaderListItem[\s\S]*?\/>/.exec(fragment())[0]).toContain('visible="{quickLinks>/isBookAdmin}"')
   })
   // The card fragment is not bound to the card controller: handlers must come from a core:require module (as in
@@ -58,9 +59,19 @@ describe('quickLinks card', () => {
     expect(fs.existsSync(path.join(webapp, 'ext/quickLinksCard/navigate.js'))).toBe(true)
   })
   it('the Manage Authors link uses the person-placeholder icon and a distinct icon from Manage Books', () => {
-    const [books, authors] = links().slice(-2)
+    const [books, authors] = links().slice(-3, -1) // Orders is now the last link
     expect(authors.icon).toBe('sap-icon://person-placeholder')
     expect(authors.icon).not.toBe(books.icon)
+  })
+  it('the Manage Orders link is the last link, comes right after Manage Authors and has its own icon', () => {
+    const all = links()
+    const t = all.map(l => l.title)
+    expect(t.indexOf('adminOrdersTitle')).toBe(t.indexOf('adminAuthorsTitle') + 1)
+    expect(t.at(-1)).toBe('adminOrdersTitle')
+    const orders = all.at(-1)
+    expect(orders.adminOnly).toBe(true)
+    expect(orders.icon).toMatch(/^sap-icon:\/\/.+/)
+    expect(all.slice(0, -1).map(l => l.icon)).not.toContain(orders.icon)
   })
   it('the Manage Authors link comes right after Manage Books', () => {
     const t = links().map(l => l.title)
@@ -135,6 +146,17 @@ describe('landing i18n keys for the manifest', () => {
   it.each(['adminAuthorsTitle', 'adminAuthorsSubtitle'])('%s exists in en and de with non-empty values', k => {
     expect(en()[k]).toBeTruthy()
     expect(de()[k]).toBeTruthy()
+  })
+  it.each(['adminOrdersTitle', 'adminOrdersSubtitle'])('%s exists in en and de with non-empty values', k => {
+    expect(en()[k]).toBeTruthy()
+    expect(de()[k]).toBeTruthy()
+  })
+  it.each(['adminOrdersTitle', 'adminOrdersSubtitle'])('%s exists in i18n_en.properties too (UI5 requests it for the supported locale en)', k => {
+    expect(props('i18n_en.properties')[k]).toBeTruthy()
+    expect(props('i18n_en.properties')[k]).toBe(en()[k])
+  })
+  it('German adminOrdersTitle differs from English', () => {
+    expect(de().adminOrdersTitle).not.toBe(en().adminOrdersTitle)
   })
   it('German adminAuthorsTitle differs from English', () => {
     expect(de().adminAuthorsTitle).not.toBe(en().adminAuthorsTitle)
