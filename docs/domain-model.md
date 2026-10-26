@@ -7,6 +7,7 @@
 | Catalog | `db/schema/catalog.cds` | Slice 1: Authors, Books (read-only API); slice 2: draft-enabled Books admin API; slice 3: customer Fiori list report and object page `app/book-shop` on `CatalogService` |
 | Customers | `db/schema/customers.cds` | Slice 4: Customers (personal data), own-profile `CustomerService`, read-only admin view |
 | Orders | `db/schema/orders.cds` | Slice 6: Orders (draft = cart), OrderItems, own-orders `OrderService`, Fiori app `app/orders`; slice 7: read-only `PurchaseHistoryService`, Fiori app `app/purchase-history` |
+| Addresses | `db/schema/addresses.cds` | Slice 9: `PostalCodes`, `CustomerAddresses` (saved ship-to addresses) |
 | Returns | `db/schema/returns.cds` | Slice 8: ReturnReasons (localized code list), Returns (draft = request), ReturnItems, customer `ReturnService`, Fiori app `app/returns` |
 | Landing | `db/schema/landing.cds` | Slice 5: Discounts, StoreInfo, read-only `LandingService`, Overview Page `app/landing` |
 
@@ -60,6 +61,15 @@
 - Submission locks the order items (`forUpdate`) before the quantity check, so two concurrent submissions for the same items serialize. Verified on SQLite only: test on HANA before release.
 - Known limits: a draft accepts a negative or zero quantity until submission (the refund shown in the draft is then wrong, activation rejects it); a PATCH on another user's draft answers 404 with "Return not found", a missing ID with the generic 404 (same pattern as orders and customers); the return number is "last + 1" and relies on the unique constraint under concurrency.
 - Deferred: shop-side processing (approve, reject, receive, refund, stock restore, admin app), exchange or store credit, return shipping labels, partial refund rules, fulfilment flow that sets `deliveredAt`, translated status texts, return window per book or tenant, return number sequence under heavy concurrency, HANA run, a manual UI check of the item value help that filters by the order of the parent return (`ValueListParameterIn` with `return.order_ID`; the path syntax appears in the Fiori docs but was not run in a browser).
+
+## Saved shipping addresses (slice 9)
+
+- `CustomerAddresses` (`cuid`, `managed`, `@PersonalData`): `customer`, optional `label`, `name`, `street`, `city`, `zip`, `country`, `isDefault`, `lastUsedAt` (read-only). Additive table. Orders keep their inline `shipTo*` copy as a snapshot, so editing or deleting an address never changes a placed order.
+- `OrderService.CustomerAddresses` (draft-enabled): `Customer` only, rows where `customer.userId = $user`; BookAdmin and BookViewer have no access. The owner is set by the handler (`customer` is deliberately not `@readonly`: CAP drops readonly input silently, and a change must give `ERR_ADDRESS_CUSTOMER_IMMUTABLE`). IDs are server-generated on draft creation and on direct create (a client-sent ID would let a customer squat another customer's draft ID). Same ship-to rules as orders (`checkAddress` in `srv/lib/orders.js`, `ERR_ORDER_*` keys). At most one default per customer (handler).
+- Cart prefill: a new cart gets the ship-to of the customer's last order (by `placedAt`, any status), else the default address, else stays empty. Placing an order saves its ship-to as an address unless an identical one exists and sets `lastUsedAt`. This write uses the db service without authorization, limited to the caller's own Customers row (see the SECURITY NOTE in `srv/lib/addresses.js`).
+- Handlers of one CAP event run in parallel: prefill, address save and the CREATE/UPDATE checks are therefore chained inside one handler in `srv/order-service.js`.
+- UI (`app/orders`): the ship-to name has a "Saved Addresses" value help that fills the whole address (typing a new one still works); the header action "My Addresses" on the order object page opens a second list report and object page for managing them (hash `#CustomerAddresses`). Not checked in a browser yet.
+- Known limits: the lock-holder error of an address draft inside `$batch` reads "Order not found" (no user ID leaks); no unique label per customer; real cross-tenant test needs the sidecar (`it.todo`); verified on SQLite only.
 
 ## Roles
 

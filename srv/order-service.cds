@@ -24,6 +24,11 @@ service OrderService {
   @restrict: [{ grant: 'READ', to: 'Customer' }]
   entity Books as projection on bookstore.Books { key ID, title, price, author.name as authorName };
 
+  // The caller's saved ship-to addresses. Draft = edit session; prefill and save-on-placement live in srv/lib/addresses.js.
+  @odata.draft.enabled
+  @restrict: [{ grant: ['READ', 'CREATE', 'UPDATE', 'DELETE'], to: 'Customer', where: 'customer.userId = $user' }]
+  entity CustomerAddresses as projection on bookstore.CustomerAddresses excluding { createdBy, modifiedBy };
+
   // Search help for the ship-to address. Countries is the CAP common code list (auto-exposed, read-only).
   @readonly
   @restrict: [{ grant: 'READ', to: 'Customer' }]
