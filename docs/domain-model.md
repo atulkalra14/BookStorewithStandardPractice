@@ -72,6 +72,13 @@
 - UI (`app/orders`): the ship-to name has a "Saved Addresses" value help that fills the whole address (typing a new one still works); the header action "My Addresses" on the order object page opens a second list report and object page for managing them (hash `#CustomerAddresses`). Not checked in a browser yet.
 - Known limits: the lock-holder error of an address draft inside `$batch` reads "Order not found" (no user ID leaks); no unique label per customer; real cross-tenant test needs the sidecar (`it.todo`); verified on SQLite only.
 
+## Book Admin tile (admin slice 1)
+
+- `LandingService.isBookAdmin()` (unbound function, `authenticated-user`): true when the caller holds `BookAdmin`. It answers only about the caller's own roles and exists only to show or hide the tile; `AdminService` enforces the role.
+- The landing Quick Links card is a custom card (`app/landing/webapp/ext/quickLinksCard`) because static OVP link-list items have no visibility setting. It lists the customer links and, below an "Admin" header, the admin app links (now Manage Books), shown only when `isBookAdmin()` is true. Non-admins see the customer links only, with no empty card.
+- `app/book-admin` (`com.bookstore.bookadmin`): hub page with one tile per admin app (Books only); the landing page links straight to the admin apps, so the hub is currently not linked. `app/book-admin-books` (`com.bookstore.bookadminbooks`): list report and object page on `AdminService.Books` (create, edit, delete, drafts).
+- Deferred: Authors app, Orders & Returns review app, deployment routes for the new apps in `mta.yaml`/approuter, tenant isolation tests (need the mtx sidecar), manual browser check. German texts are drafted and need native review.
+
 ## Roles
 
 | Role | Scope | Grants |

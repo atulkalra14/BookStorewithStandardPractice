@@ -130,48 +130,14 @@
       },
       "quickLinks": {
         "model": "mainModel",
-        "template": "sap.ovp.cards.v4.linklist",
+        "template": "com.bookstore.landing.ext.quickLinksCard",
         "settings": {
           "title": "{{quickLinksTitle}}",
-          "listFlavor": "standard",
+          "entitySet": "StoreInfo",
           "defaultSpan": {
-            "rows": 22,
+            "rows": 28,
             "cols": 1
-          },
-          "staticContent": [
-            {
-              "title": "{{browseBooksTitle}}",
-              "subTitle": "{{browseBooksSubtitle}}",
-              "imageUri": "sap-icon://search",
-              "imageAltText": "{{browseBooksIcon}}",
-              "targetUri": "../../com.bookstore.bookshop/index.html",
-              "openInNewWindow": false
-            },
-            {
-              "title": "{{orderBooksTitle}}",
-              "subTitle": "{{orderBooksSubtitle}}",
-              "imageUri": "sap-icon://cart",
-              "imageAltText": "{{orderBooksIcon}}",
-              "targetUri": "../../com.bookstore.orders/index.html",
-              "openInNewWindow": false
-            },
-            {
-              "title": "{{purchaseHistoryTitle}}",
-              "subTitle": "{{purchaseHistorySubtitle}}",
-              "imageUri": "sap-icon://history",
-              "imageAltText": "{{purchaseHistoryIcon}}",
-              "targetUri": "../../com.bookstore.purchasehistory/index.html",
-              "openInNewWindow": false
-            },
-            {
-              "title": "{{returnBooksTitle}}",
-              "subTitle": "{{returnBooksSubtitle}}",
-              "imageUri": "sap-icon://undo",
-              "imageAltText": "{{returnBooksIcon}}",
-              "targetUri": "../../com.bookstore.returns/index.html",
-              "openInNewWindow": false
-            }
-          ]
+          }
         }
       },
       "storeInfo": {

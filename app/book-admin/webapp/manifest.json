@@ -1,0 +1,103 @@
+{
+  "_version": "1.89.0",
+  "sap.app": {
+    "id": "com.bookstore.bookadmin",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.33.0",
+      "toolsId": "156853ae-fcda-4e44-99e8-4e55a62b2e60"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.153.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.bookstore.bookadmin.i18n.i18n",
+          "supportedLocales": [
+            "en",
+            "de"
+          ],
+          "fallbackLocale": "en"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.bookstore.bookadmin.view",
+        "async": true,
+        "viewPath": "com.bookstore.bookadmin.view"
+      },
+      "routes": [
+        {
+          "name": "RouteHub",
+          "pattern": ":?query:",
+          "target": [
+            "TargetHub"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetHub": {
+          "id": "Hub",
+          "name": "Hub"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.bookstore.bookadmin.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  }
+}

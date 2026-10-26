@@ -11,6 +11,7 @@ export default class LandingService extends cds.ApplicationService {
     this.after('READ', ActiveDiscounts, addDiscountedPrice)
     this.on('READ', BestSellers, bestSellers)
     this.after('READ', BestSellers, addBestSellerDescriptions)
+    this.on('isBookAdmin', req => req.user.is('BookAdmin'))
     return super.init()
   }
 }

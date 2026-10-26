@@ -20,6 +20,10 @@ service LandingService {
     'EUR' as currency : String(3)
   };
 
+  // True when the caller holds BookAdmin. Drives only the visibility of the Book Admin tile (handler in landing-service.js);
+  // AdminService enforces the role. Answers about the caller's own roles, nothing else.
+  function isBookAdmin() returns Boolean;
+
   @readonly entity StoreInfo as projection on bookstore.StoreInfo { key ID, name, address, phone, openingHours, description, heroImageUrl };
 
   // Quantity sold per book over Placed orders, computed by the handler (srv/lib/orders.js). Aggregates only, no customer data.
