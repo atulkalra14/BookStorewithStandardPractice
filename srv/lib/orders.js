@@ -150,6 +150,12 @@ export async function placeOrder (req) {
   for (const item of items) {
     const book = byId.get(item.book_ID)
     if (!book) { req.error({ status: 400, code: 'ASSERT_FK', message: 'ASSERT_FK', target: 'items' }); failed = true; continue }
+    // Price is mandatory in the model, but rows written earlier can still lack one: never total them as 0.00.
+    if (book.price == null) {
+      req.error({ status: 400, code: 'ERR_ORDER_BOOK_NO_PRICE', message: 'ERR_ORDER_BOOK_NO_PRICE', args: [book.title], target: 'items' })
+      failed = true
+      continue
+    }
     if (book.stock < item.quantity) {
       req.error({ status: 400, code: 'ERR_ORDER_INSUFFICIENT_STOCK', message: 'ERR_ORDER_INSUFFICIENT_STOCK', args: [book.title], target: 'items' })
       failed = true
