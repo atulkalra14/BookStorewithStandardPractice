@@ -83,10 +83,10 @@ describe('PurchaseHistoryService: content', () => {
 })
 
 describe('PurchaseHistoryService: exposed fields', () => {
-  it('$metadata exposes only the list columns, no ship-to data, customer or items', async () => {
+  it('$metadata exposes the order details and own items, but no customer, books or countries', async () => {
     const meta = (await t.GET(`${ph}/$metadata`, user('gina'))).data
-    for (const p of ['orderNumber', 'placedAt', 'status', 'totalAmount', 'currency']) expect(meta).toContain(`Property Name="${p}"`)
-    for (const p of ['shipTo', 'customer_ID', 'Name="Customers"', 'items', 'OrderItems', 'Countries']) expect(meta).not.toContain(p)
+    for (const p of ['orderNumber', 'placedAt', 'deliveredAt', 'status', 'totalAmount', 'currency', 'shipToName', 'shipToCountry_code', 'bookTitle']) expect(meta).toContain(`Property Name="${p}"`)
+    for (const p of ['customer_ID', 'Name="Customers"', 'Name="Books"', 'Name="OrderItems"', 'Countries']) expect(meta).not.toContain(p)
   })
 
   it('column labels are translated in en and de', async () => {
@@ -108,11 +108,13 @@ describe('PurchaseHistoryService: filter bypass attempts', () => {
     }
   })
 
-  it('hugo gets count 0 and cannot expand navigation properties', async () => {
+  it('hugo gets count 0, cannot expand customer and sees no items', async () => {
     await setup()
     expect((await t.GET(`${ph}/Orders/$count`, user('hugo'))).data).toBe(0)
     expect((await t.GET(`${ph}/Orders?$expand=customer`, user('hugo'))).status).toBe(400)
-    expect((await t.GET(`${ph}/Orders?$expand=items`, user('hugo'))).status).toBe(400)
+    const items = await t.GET(`${ph}/Orders?$expand=items`, user('hugo'))
+    expect([items.status, items.data.value.length]).toEqual([200, 0])
+    expect((await t.GET(`${ph}/Items/$count`, user('hugo'))).data).toBe(0)
   })
 
   it("hugo cannot read gina's order through $batch", async () => {
