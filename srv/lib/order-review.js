@@ -1,28 +1,14 @@
 import cds from '@sap/cds'
 import { restoreStock } from './orders.js'
+import { checkReason } from './review-reason.js'
 
 const { SELECT, UPDATE } = cds.ql
-const MAX_REASON = 500
 
 // What each action does: the statuses it starts from, the status it sets, and whether the customer-visible reason is mandatory.
 const ACTIONS = {
   accept: { from: ['Placed'], to: 'Accepted', reasonRequired: false, notAllowed: 'ERR_ORDER_NOT_DECIDABLE' },
   reject: { from: ['Placed'], to: 'Rejected', reasonRequired: true, notAllowed: 'ERR_ORDER_NOT_DECIDABLE', restock: true, undeliveredOnly: true },
   cancel: { from: ['Placed', 'Accepted'], to: 'Cancelled', reasonRequired: true, notAllowed: 'ERR_ORDER_NOT_ADMIN_CANCELLABLE', restock: true, undeliveredOnly: true }
-}
-
-// The model leaves the reason checks to the handler so that the messages are keyed and translated.
-// Returns the reason to store: null when none was given.
-function checkReason (req, { reasonRequired }) {
-  const reason = req.data.reason == null ? '' : String(req.data.reason).trim()
-  if (reason === '') {
-    if (reasonRequired) return req.reject({ status: 400, code: 'ERR_ORDER_REASON_REQUIRED', message: 'ERR_ORDER_REASON_REQUIRED', target: 'reason' })
-    return null
-  }
-  if (reason.length > MAX_REASON) {
-    return req.reject({ status: 400, code: 'ERR_ORDER_REASON_TOO_LONG', message: 'ERR_ORDER_REASON_TOO_LONG', args: [MAX_REASON], target: 'reason' })
-  }
-  return reason
 }
 
 // Bound actions accept, reject and cancel of AdminService.Orders.

@@ -46,6 +46,7 @@ annotate OrderItems with @title: '{i18n>OrderItems}';
 
 annotate Orders with @PersonalData: { EntitySemantics: 'Other' } {
   customer      @PersonalData.FieldSemantics: 'DataSubjectID';
+  decisionReason @PersonalData.IsPotentiallyPersonal;  // free text typed by the shop, may name the customer
   shipToName    @PersonalData.IsPotentiallyPersonal;
   shipToStreet  @PersonalData.IsPotentiallyPersonal;
   shipToCity    @PersonalData.IsPotentiallyPersonal;

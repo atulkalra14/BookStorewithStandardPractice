@@ -4,8 +4,9 @@ using { bookstore.Customers } from './customers';
 
 namespace bookstore;
 
-// Lifecycle: a customer submits a request (Requested) or withdraws it (Cancelled). The shop decides (Approved, Rejected),
-// receives the goods (Received) and refunds (Refunded). Only the customer steps exist so far; the shop steps come with an admin slice.
+// Lifecycle: a customer submits a request (Requested) or withdraws it (Cancelled). The shop decides while it is Requested
+// (Approved, Rejected or Cancelled: AdminService, with a reason shown to the customer), receives the goods (Received) and
+// refunds (Refunded). Receiving and refunding have no step yet, so an Approved return stays Approved for now.
 type ReturnStatus : String(20) enum {
   Requested;
   Approved;
@@ -31,6 +32,8 @@ entity Returns : cuid, managed {
   refundAmount : Decimal(11,2)  @readonly @title: '{i18n>RefundAmount}';  // sum of line refunds, recalculated by the handler
   currency     : String(3)      @readonly @title: '{i18n>Currency}';      // same as the order, fixed 'EUR'
   requestedAt  : Timestamp      @readonly @title: '{i18n>RequestedAt}';
+  decisionReason: String(500)   @readonly @title: '{i18n>DecisionReason}';  // shop's reason, shown to the customer; set by the admin actions
+  decidedAt    : Timestamp      @readonly @title: '{i18n>DecidedAt}';       // when the shop approved, rejected or cancelled
 }
 
 entity ReturnItems : cuid {
@@ -49,4 +52,5 @@ annotate ReturnItems with @title: '{i18n>ReturnItems}';
 annotate Returns with @PersonalData: { EntitySemantics: 'Other' } {
   customer @PersonalData.FieldSemantics: 'DataSubjectID';
   comment  @PersonalData.IsPotentiallyPersonal;  // free text, may contain personal data
+  decisionReason @PersonalData.IsPotentiallyPersonal;  // free text typed by the shop, may name the customer
 };

@@ -27,14 +27,14 @@ describe('quickLinks card', () => {
     expect(card().template).toBe('com.bookstore.landing.ext.quickLinksCard')
     expect(card().settings.title).toBe('{{quickLinksTitle}}')
   })
-  it('lists the 4 customer links in the agreed order, then the Books, Authors and Orders admin links', () => {
-    expect(links().map(l => l.title)).toEqual(['browseBooksTitle', 'orderBooksTitle', 'purchaseHistoryTitle', 'returnBooksTitle', 'adminBooksTitle', 'adminAuthorsTitle', 'adminOrdersTitle'])
+  it('lists the 4 customer links in the agreed order, then the Books, Authors, Orders and Returns admin links', () => {
+    expect(links().map(l => l.title)).toEqual(['browseBooksTitle', 'orderBooksTitle', 'purchaseHistoryTitle', 'returnBooksTitle', 'adminBooksTitle', 'adminAuthorsTitle', 'adminOrdersTitle', 'adminReturnsTitle'])
   })
   it('subtitles use matching i18n keys', () => {
-    expect(links().map(l => l.subtitle)).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle', 'adminBooksSubtitle', 'adminAuthorsSubtitle', 'adminOrdersSubtitle'])
+    expect(links().map(l => l.subtitle)).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle', 'adminBooksSubtitle', 'adminAuthorsSubtitle', 'adminOrdersSubtitle', 'adminReturnsSubtitle'])
   })
   // '../../' reaches the site root both when index.html is opened directly and in the Fiori launchpad sandbox.
-  it('links target the book shop, orders, purchase-history, returns and the Books, Authors and Orders admin apps', () => {
+  it('links target the book shop, orders, purchase-history, returns and the Books, Authors, Orders and Returns admin apps', () => {
     expect(links().map(l => l.target)).toEqual([
       '../../com.bookstore.bookshop/index.html',
       '../../com.bookstore.orders/index.html',
@@ -42,11 +42,12 @@ describe('quickLinks card', () => {
       '../../com.bookstore.returns/index.html',
       '../../com.bookstore.bookadminbooks/index.html',
       '../../com.bookstore.bookadminauthors/index.html',
-      '../../com.bookstore.bookadminorders/index.html'
+      '../../com.bookstore.bookadminorders/index.html',
+      '../../com.bookstore.bookadminreturns/index.html'
     ])
   })
   it('only the admin links and their header are bound to isBookAdmin; customer links are always visible', () => {
-    expect(links().map(l => l.adminOnly)).toEqual([false, false, false, false, true, true, true])
+    expect(links().map(l => l.adminOnly)).toEqual([false, false, false, false, true, true, true, true])
     expect(/<GroupHeaderListItem[\s\S]*?\/>/.exec(fragment())[0]).toContain('visible="{quickLinks>/isBookAdmin}"')
   })
   // The card fragment is not bound to the card controller: handlers must come from a core:require module (as in
@@ -59,19 +60,40 @@ describe('quickLinks card', () => {
     expect(fs.existsSync(path.join(webapp, 'ext/quickLinksCard/navigate.js'))).toBe(true)
   })
   it('the Manage Authors link uses the person-placeholder icon and a distinct icon from Manage Books', () => {
-    const [books, authors] = links().slice(-3, -1) // Orders is now the last link
+    const byTitle = t => links().find(l => l.title === t)
+    const [books, authors] = [byTitle('adminBooksTitle'), byTitle('adminAuthorsTitle')] // looked up by title: more admin links follow
     expect(authors.icon).toBe('sap-icon://person-placeholder')
     expect(authors.icon).not.toBe(books.icon)
   })
-  it('the Manage Orders link is the last link, comes right after Manage Authors and has its own icon', () => {
+  it('the Manage Orders link comes right after Manage Authors and has its own icon', () => {
     const all = links()
     const t = all.map(l => l.title)
     expect(t.indexOf('adminOrdersTitle')).toBe(t.indexOf('adminAuthorsTitle') + 1)
-    expect(t.at(-1)).toBe('adminOrdersTitle')
-    const orders = all.at(-1)
+    const orders = all[t.indexOf('adminOrdersTitle')]
     expect(orders.adminOnly).toBe(true)
     expect(orders.icon).toMatch(/^sap-icon:\/\/.+/)
-    expect(all.slice(0, -1).map(l => l.icon)).not.toContain(orders.icon)
+    expect(all.filter(l => l !== orders).map(l => l.icon)).not.toContain(orders.icon)
+  })
+  it('the Review Returns link is the last link, comes right after Review Orders, is admin-only and has its own inbox icon', () => {
+    const all = links()
+    const t = all.map(l => l.title)
+    expect(t.at(-1)).toBe('adminReturnsTitle')
+    expect(t.indexOf('adminReturnsTitle')).toBe(t.indexOf('adminOrdersTitle') + 1)
+    const returns = all.at(-1)
+    expect(returns.adminOnly).toBe(true)
+    expect(returns.icon).toBe('sap-icon://inbox')
+    expect(returns.target).toBe('../../com.bookstore.bookadminreturns/index.html')
+    expect(all.slice(0, -1).map(l => l.icon)).not.toContain(returns.icon)
+  })
+  it('the admin Returns link has no hard-coded text: title and subtitle are i18n bindings', () => {
+    const returns = links().at(-1)
+    expect(returns.title).toBe('adminReturnsTitle')
+    expect(returns.subtitle).toBe('adminReturnsSubtitle')
+  })
+  // The card grows with every admin link; 38 rows was enough for 7 links, 8 links need at least 42.
+  it('the card is tall enough for all 8 links (at least 42 rows)', () => {
+    expect(card().settings.defaultSpan.rows).toBeGreaterThanOrEqual(42)
+    expect(card().settings.defaultSpan.cols).toBe(1)
   })
   it('the Manage Authors link comes right after Manage Books', () => {
     const t = links().map(l => l.title)
@@ -154,6 +176,18 @@ describe('landing i18n keys for the manifest', () => {
   it.each(['adminOrdersTitle', 'adminOrdersSubtitle'])('%s exists in i18n_en.properties too (UI5 requests it for the supported locale en)', k => {
     expect(props('i18n_en.properties')[k]).toBeTruthy()
     expect(props('i18n_en.properties')[k]).toBe(en()[k])
+  })
+  it.each(['adminReturnsTitle', 'adminReturnsSubtitle'])('%s exists in en and de with non-empty values', k => {
+    expect(en()[k]).toBeTruthy()
+    expect(de()[k]).toBeTruthy()
+  })
+  it.each(['adminReturnsTitle', 'adminReturnsSubtitle'])('%s exists in i18n_en.properties too (UI5 requests it for the supported locale en)', k => {
+    expect(props('i18n_en.properties')[k]).toBeTruthy()
+    expect(props('i18n_en.properties')[k]).toBe(en()[k])
+  })
+  it('German adminReturnsTitle and adminReturnsSubtitle differ from English', () => {
+    expect(de().adminReturnsTitle).not.toBe(en().adminReturnsTitle)
+    expect(de().adminReturnsSubtitle).not.toBe(en().adminReturnsSubtitle)
   })
   it('German adminOrdersTitle differs from English', () => {
     expect(de().adminOrdersTitle).not.toBe(en().adminOrdersTitle)

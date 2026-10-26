@@ -18,6 +18,8 @@ annotate service.Orders with @(
         SortOrder      : [{ $Type : 'Common.SortOrderType', Property : placedAt, Descending : true }],
         Visualizations : ['@UI.LineItem'],
     },
+    // reject and cancel exist on both AdminService.Orders and AdminService.Returns (overloads in OData): the action names
+    // carry the binding parameter type so that this app calls its own. Not checked in a browser yet.
     UI.LineItem : [
         { $Type : 'UI.DataField', Value : orderNumber },
         { $Type : 'UI.DataField', Value : customer.name },
@@ -25,14 +27,14 @@ annotate service.Orders with @(
         { $Type : 'UI.DataField', Value : status },
         { $Type : 'UI.DataField', Value : totalAmount },
         { $Type : 'UI.DataFieldForAction', Action : 'AdminService.accept', Label : '{i18n>AcceptOrder}' },
-        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.reject', Label : '{i18n>RejectOrder}' },
-        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.cancel', Label : '{i18n>CancelOrder}' },
+        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.reject(AdminService.Orders)', Label : '{i18n>RejectOrder}' },
+        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.cancel(AdminService.Orders)', Label : '{i18n>CancelOrder}' },
     ],
     // Header buttons of the object page: the same three decisions.
     UI.Identification : [
         { $Type : 'UI.DataFieldForAction', Action : 'AdminService.accept', Label : '{i18n>AcceptOrder}' },
-        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.reject', Label : '{i18n>RejectOrder}' },
-        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.cancel', Label : '{i18n>CancelOrder}' },
+        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.reject(AdminService.Orders)', Label : '{i18n>RejectOrder}' },
+        { $Type : 'UI.DataFieldForAction', Action : 'AdminService.cancel(AdminService.Orders)', Label : '{i18n>CancelOrder}' },
     ],
     UI.HeaderFacets : [
         { $Type : 'UI.ReferenceFacet', Target : '@UI.DataPoint#Total', ID : 'TotalFacet' },
