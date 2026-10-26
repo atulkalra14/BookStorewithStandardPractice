@@ -113,14 +113,12 @@
         }
       },
       "[production]": {
-        "auth": "xsuaa",
-        "multitenancy": true
+        "auth": "xsuaa"
       },
-      "[with-mtx]": {
-        "multitenancy": true
-      }
-    },
-    "profile": "with-mtx-sidecar"
+      "html5-repo": true,
+      "destinations": true,
+      "workzone": true
+    }
   },
   "workspaces": [
     "app/*"

@@ -16,6 +16,9 @@
     "start": "cds-serve"
   },
   "cds": {
-    "profile": "mtx-sidecar"
+    "profile": "mtx-sidecar",
+    "requires": {
+      "html5-host": true
+    }
   }
 }

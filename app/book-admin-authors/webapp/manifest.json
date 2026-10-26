@@ -24,6 +24,18 @@
           "odataVersion": "4.0"
         }
       }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "BookshopAdminAuthor-manage": {
+          "semanticObject": "BookshopAdminAuthor",
+          "action": "manage",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
@@ -154,5 +166,9 @@
     "app": {
       "enableLazyLoading": true
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "BookStoreWithStandardPractices.service"
   }
 }

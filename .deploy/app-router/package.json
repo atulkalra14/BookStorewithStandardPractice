@@ -3,6 +3,9 @@
   "dependencies": {
     "@sap/approuter": "^23.0.0"
   },
+  "overrides": {
+    "body-parser": "^2.4.0"
+  },
   "scripts": {
     "start": "node node_modules/@sap/approuter/approuter.js"
   }
