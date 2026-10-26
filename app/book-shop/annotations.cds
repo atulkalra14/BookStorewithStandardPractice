@@ -12,11 +12,13 @@ annotate service.Books with @(
     UI.SelectionFields : [
         title,
         author_ID,
+        genre_code,
     ],
     UI.LineItem : [
         { $Type : 'UI.DataField', Value : imageUrl },
         { $Type : 'UI.DataField', Value : title },
         { $Type : 'UI.DataField', Value : author_ID },
+        { $Type : 'UI.DataField', Value : genre_code },
         { $Type : 'UI.DataField', Value : price },
         { $Type : 'UI.DataField', Value : stock },
     ],
@@ -25,6 +27,7 @@ annotate service.Books with @(
         Data  : [
             { $Type : 'UI.DataField', Value : title },
             { $Type : 'UI.DataField', Value : author_ID },
+            { $Type : 'UI.DataField', Value : genre_code },
             { $Type : 'UI.DataField', Value : price },
             { $Type : 'UI.DataField', Value : stock },
         ],
@@ -40,6 +43,26 @@ annotate service.Books with @(
 );
 
 annotate service.Books with {
+    genre @(
+        Common.Text            : genre.name,
+        Common.TextArrangement : #TextOnly,
+        Common.ValueListWithFixedValues : true,
+        Common.ValueList       : {
+            $Type          : 'Common.ValueListType',
+            CollectionPath : 'Genres',
+            Parameters     : [
+                {
+                    $Type             : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : genre_code,
+                    ValueListProperty : 'code',
+                },
+                {
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'name',
+                },
+            ],
+        },
+    );
     imageUrl @(UI.IsImageURL : true, Common.Text : title, Common.TextArrangement : #TextOnly);
     author @(
         Common.Text            : author.name,
