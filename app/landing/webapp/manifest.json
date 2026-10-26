@@ -135,7 +135,7 @@
           "title": "{{quickLinksTitle}}",
           "entitySet": "StoreInfo",
           "defaultSpan": {
-            "rows": 28,
+            "rows": 34,
             "cols": 1
           }
         }

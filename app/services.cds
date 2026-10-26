@@ -10,3 +10,5 @@ using from './purchase-history/annotations';
 using from './returns/annotations';
 
 using from './book-admin-books/annotations';
+
+using from './book-admin-authors/annotations';

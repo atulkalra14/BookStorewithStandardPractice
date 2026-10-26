@@ -56,17 +56,26 @@ describe('AdminService authorization: BookAdmin (dave)', () => {
     expect((await DELETE(`${base}/Books(ID=${id},${act})`, dave)).status).toBe(204)
   })
 
-  it('Authors POST/PATCH/DELETE -> 405 (@readonly)', async () => {
-    expect((await POST(`${base}/Authors`, { name: 'X' }, dave)).status).toBe(405)
-    expect((await PATCH(`${base}/Authors(${A1})`, { name: 'X' }, dave)).status).toBe(405)
-    expect((await DELETE(`${base}/Authors(${A1})`, dave)).status).toBe(405)
+  it('Authors full CRUD with draft (delete of an author without books -> 204)', async () => {
+    const c = await POST(`${base}/Authors`, { name: 'Auth Author' }, dave)
+    expect(c.status).toBe(201)
+    const id = c.data.ID
+    const draft = `${base}/Authors(ID=${id},IsActiveEntity=false)`
+    const active = `${base}/Authors(ID=${id},${act})`
+    expect((await PATCH(draft, { name: 'Auth Author 2' }, dave)).status).toBe(200)
+    expect((await POST(`${draft}/AdminService.draftActivate`, {}, dave)).status).toBe(201)
+    expect((await GET(active, dave)).status).toBe(200)
+    const e = await POST(`${active}/AdminService.draftEdit`, { PreserveChanges: true }, dave)
+    expect(e.status).toBe(201)
+    expect((await PATCH(draft, { name: 'Auth Author 3' }, dave)).status).toBe(200)
+    expect((await POST(`${draft}/AdminService.draftActivate`, {}, dave)).status).toBe(200)
+    expect((await DELETE(active, dave)).status).toBe(204)
   })
 
-  it('erin (BookAdmin, t2) has the same permissions', async () => {
-    const erin = user('erin')
-    expect((await GET(`${base}/Books`, erin)).status).toBe(200)
-    expect((await GET(`${base}/Authors`, erin)).status).toBe(200)
-    expect((await POST(`${base}/Authors`, { name: 'X' }, erin)).status).toBe(405)
+  it('Authors are no longer read-only: POST/PATCH/DELETE are not 405', async () => {
+    const c = await POST(`${base}/Authors`, { name: 'Not readonly' }, dave)
+    expect(c.status).not.toBe(405)
+    await DELETE(`${base}/Authors(ID=${c.data.ID},IsActiveEntity=false)`, dave)
   })
 
   it('BookAdmin alone does not grant CatalogService access (needs BookViewer) -> 403', async () => {

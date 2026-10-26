@@ -6,8 +6,9 @@ service AdminService {
   @restrict: [{ grant: '*', to: 'BookAdmin' }]
   entity Books as projection on bookstore.Books excluding { createdBy, modifiedBy };
 
-  @readonly
-  @restrict: [{ grant: 'READ', to: 'BookAdmin' }]
+  // Editable like Books. An author that still has books cannot be deleted (handler, ERR_AUTHOR_HAS_BOOKS).
+  @odata.draft.enabled
+  @restrict: [{ grant: '*', to: 'BookAdmin' }]
   entity Authors as projection on bookstore.Authors excluding { createdBy, modifiedBy };
 
   // Value help for Books.genre: a code list, never edited by users, so no draft.
