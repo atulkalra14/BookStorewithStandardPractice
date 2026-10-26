@@ -8,41 +8,66 @@ const manifest = () => JSON.parse(fs.readFileSync(path.join(webapp, 'manifest.js
 const cards = () => manifest()['sap.ovp'].cards
 const props = f => Object.fromEntries(fs.readFileSync(path.join(webapp, 'i18n', f), 'utf8').split(/\r?\n/).filter(l => l.trim() && !/^\s*[#!]/.test(l)).map(l => { const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim()] }))
 const walk = d => fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]) : []
-const key = v => /^\{\{(.+)\}\}$/.exec(v || '')?.[1]
 
 describe('quickLinks card', () => {
   const card = () => cards().quickLinks
-  const items = () => card().settings.staticContent
-  it('keeps the linklist template', () => {
-    expect(card().template).toBe('sap.ovp.cards.v4.linklist')
-  })
-  it('has exactly 4 items in the agreed order', () => {
-    expect(items().map(i => key(i.title))).toEqual(['browseBooksTitle', 'orderBooksTitle', 'purchaseHistoryTitle', 'returnBooksTitle'])
-  })
-  it('subtitles use matching i18n keys', () => {
-    expect(items().map(i => key(i.subTitle))).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle'])
-  })
-  // OVP prepends its own base path: '/com.bookstore.landing' when index.html is opened directly and
-  // '/com.bookstore.landing/test' in the Fiori launchpad sandbox. '../../' reaches the site root in both.
-  it('Browse Books targets the book shop; Order Books targets the orders app, Purchase History the purchase-history app; Return Books the returns app', () => {
-    const all = items()
-    expect(all.length).toBe(4)
-    expect(all[0].targetUri).toBe('../../com.bookstore.bookshop/index.html')
-    expect(all[1].targetUri).toBe('../../com.bookstore.orders/index.html')
-    expect(all[2].targetUri).toBe('../../com.bookstore.purchasehistory/index.html')
-    expect(all[3].targetUri).toBe('../../com.bookstore.returns/index.html')
-    expect(all[3].openInNewWindow).toBe(false)
-  })
-  it('every item has an sap-icon imageUri and an i18n imageAltText', () => {
-    const all = items()
-    expect(all.length).toBe(4)
-    for (const i of all) {
-      expect(i.imageUri).toMatch(/^sap-icon:\/\/.+/)
-      expect(key(i.imageAltText)).toBeTruthy()
+  const fragment = () => fs.readFileSync(path.join(webapp, 'ext/quickLinksCard/QuickLinksCard.fragment.xml'), 'utf8')
+  // [title key, subtitle key, icon, target] in fragment order, with whether the item is admin-only
+  const links = () => [...fragment().matchAll(/<StandardListItem([\s\S]*?)<\/StandardListItem>/g)].map(m => {
+    const attr = n => new RegExp(`${n}="([^"]*)"`).exec(m[1])?.[1]
+    return {
+      title: /\{@i18n>(\w+)\}/.exec(attr('title'))?.[1],
+      subtitle: /\{@i18n>(\w+)\}/.exec(attr('description'))?.[1],
+      icon: attr('icon'),
+      target: /key="target" value="([^"]+)"/.exec(m[1])?.[1],
+      adminOnly: attr('visible') === '{quickLinks>/isBookAdmin}'
     }
   })
-  it('icon alt text keys are the agreed ones', () => {
-    expect(items().map(i => key(i.imageAltText))).toEqual(['browseBooksIcon', 'orderBooksIcon', 'purchaseHistoryIcon', 'returnBooksIcon'])
+  it('is a custom card (the static OVP linklist has no per-item visibility)', () => {
+    expect(card().template).toBe('com.bookstore.landing.ext.quickLinksCard')
+    expect(card().settings.title).toBe('{{quickLinksTitle}}')
+  })
+  it('lists the 4 customer links in the agreed order, then the admin links', () => {
+    expect(links().map(l => l.title)).toEqual(['browseBooksTitle', 'orderBooksTitle', 'purchaseHistoryTitle', 'returnBooksTitle', 'adminBooksTitle'])
+  })
+  it('subtitles use matching i18n keys', () => {
+    expect(links().map(l => l.subtitle)).toEqual(['browseBooksSubtitle', 'orderBooksSubtitle', 'purchaseHistorySubtitle', 'returnBooksSubtitle', 'adminBooksSubtitle'])
+  })
+  // '../../' reaches the site root both when index.html is opened directly and in the Fiori launchpad sandbox.
+  it('links target the book shop, orders, purchase-history, returns and the Books admin app', () => {
+    expect(links().map(l => l.target)).toEqual([
+      '../../com.bookstore.bookshop/index.html',
+      '../../com.bookstore.orders/index.html',
+      '../../com.bookstore.purchasehistory/index.html',
+      '../../com.bookstore.returns/index.html',
+      '../../com.bookstore.bookadminbooks/index.html'
+    ])
+  })
+  it('only the admin link and its header are bound to isBookAdmin; customer links are always visible', () => {
+    expect(links().map(l => l.adminOnly)).toEqual([false, false, false, false, true])
+    expect(/<GroupHeaderListItem[\s\S]*?\/>/.exec(fragment())[0]).toContain('visible="{quickLinks>/isBookAdmin}"')
+  })
+  // The card fragment is not bound to the card controller: handlers must come from a core:require module (as in
+  // the famous books card), otherwise a click does nothing.
+  it('every link opens through the core:require navigate module, which exists', () => {
+    const f = fragment()
+    expect(f).toContain(`core:require="{links: 'com/bookstore/landing/ext/quickLinksCard/navigate'}"`)
+    expect((f.match(/press="links\.open"/g) || []).length).toBe(links().length)
+    expect(f).not.toMatch(/press="\./)
+    expect(fs.existsSync(path.join(webapp, 'ext/quickLinksCard/navigate.js'))).toBe(true)
+  })
+  it('every link has an sap-icon', () => {
+    for (const l of links()) expect(l.icon).toMatch(/^sap-icon:\/\/.+/)
+  })
+  it('card texts are i18n bindings only (no hard-coded text)', () => {
+    expect(fragment()).not.toMatch(/(title|description|text)="[^{"]/)
+  })
+  it('every text key used by the fragment exists in en and de', () => {
+    const keys = [...fragment().matchAll(/\{@i18n>(\w+)\}/g)].map(m => m[1])
+    for (const k of new Set(keys)) {
+      expect(Object.keys(props('i18n.properties'))).toContain(k)
+      expect(Object.keys(props('i18n_de.properties'))).toContain(k)
+    }
   })
 })
 

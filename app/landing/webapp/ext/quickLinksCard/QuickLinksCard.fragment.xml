@@ -1,0 +1,52 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <List showSeparators="Inner" core:require="{links: 'com/bookstore/landing/ext/quickLinksCard/navigate'}">
+        <StandardListItem
+            icon="sap-icon://search"
+            iconDensityAware="false"
+            title="{@i18n>browseBooksTitle}"
+            description="{@i18n>browseBooksSubtitle}"
+            type="Navigation"
+            press="links.open">
+            <customData><core:CustomData key="target" value="../../com.bookstore.bookshop/index.html" /></customData>
+        </StandardListItem>
+        <StandardListItem
+            icon="sap-icon://cart"
+            iconDensityAware="false"
+            title="{@i18n>orderBooksTitle}"
+            description="{@i18n>orderBooksSubtitle}"
+            type="Navigation"
+            press="links.open">
+            <customData><core:CustomData key="target" value="../../com.bookstore.orders/index.html" /></customData>
+        </StandardListItem>
+        <StandardListItem
+            icon="sap-icon://history"
+            iconDensityAware="false"
+            title="{@i18n>purchaseHistoryTitle}"
+            description="{@i18n>purchaseHistorySubtitle}"
+            type="Navigation"
+            press="links.open">
+            <customData><core:CustomData key="target" value="../../com.bookstore.purchasehistory/index.html" /></customData>
+        </StandardListItem>
+        <StandardListItem
+            icon="sap-icon://undo"
+            iconDensityAware="false"
+            title="{@i18n>returnBooksTitle}"
+            description="{@i18n>returnBooksSubtitle}"
+            type="Navigation"
+            press="links.open">
+            <customData><core:CustomData key="target" value="../../com.bookstore.returns/index.html" /></customData>
+        </StandardListItem>
+        <!-- Admin links: shown to BookAdmin users only (LandingService.isBookAdmin). Visibility is a convenience: AdminService enforces the role. -->
+        <GroupHeaderListItem title="{@i18n>adminLinksHeader}" visible="{quickLinks>/isBookAdmin}" />
+        <StandardListItem
+            visible="{quickLinks>/isBookAdmin}"
+            icon="sap-icon://course-book"
+            iconDensityAware="false"
+            title="{@i18n>adminBooksTitle}"
+            description="{@i18n>adminBooksSubtitle}"
+            type="Navigation"
+            press="links.open">
+            <customData><core:CustomData key="target" value="../../com.bookstore.bookadminbooks/index.html" /></customData>
+        </StandardListItem>
+    </List>
+</core:FragmentDefinition>

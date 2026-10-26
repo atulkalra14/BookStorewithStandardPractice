@@ -1,17 +1,17 @@
 sap.ui.define(["sap/ovp/cards/custom/Component"], function (CustomCardComponent) {
     "use strict";
 
-    return CustomCardComponent.extend("com.bookstore.landing.ext.bookAdminCard.Component", {
+    return CustomCardComponent.extend("com.bookstore.landing.ext.quickLinksCard.Component", {
         metadata: {
             properties: {
                 contentFragment: {
                     type: "string",
-                    defaultValue: "com.bookstore.landing.ext.bookAdminCard.BookAdminCard"
+                    defaultValue: "com.bookstore.landing.ext.quickLinksCard.QuickLinksCard"
                 },
                 customizing: {
                     "sap.ui.controllerExtensions": {
                         "sap.ovp.cards.generic.Card": {
-                            controllerName: "com.bookstore.landing.ext.bookAdminCard.BookAdminCard"
+                            controllerName: "com.bookstore.landing.ext.quickLinksCard.QuickLinksCard"
                         }
                     }
                 }

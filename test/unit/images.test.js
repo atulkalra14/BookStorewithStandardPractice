@@ -63,8 +63,10 @@ describe('landing cards with images', () => {
     expect(f).not.toMatch(/discountPercent/)
   })
   it('quick links card is tall enough to show all links without resizing', () => {
-    const links = cards.quickLinks.settings
-    expect(links.defaultSpan.rows).toBeGreaterThanOrEqual(links.staticContent.length * 5)
+    // The custom card lists the customer links and, for BookAdmin, the admin links below them.
+    const fragment = read('app/landing/webapp/ext/quickLinksCard/QuickLinksCard.fragment.xml')
+    const count = (fragment.match(/<StandardListItem/g) || []).length
+    expect(cards.quickLinks.settings.defaultSpan.rows).toBeGreaterThanOrEqual(count * 5)
   })
   it('card fragments give images alt text or mark them decorative', () => {
     for (const f of ['discountCard/DiscountCard', 'bestSellerCard/BestSellerCard']) {

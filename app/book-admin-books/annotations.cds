@@ -45,6 +45,8 @@ annotate service.Books with @(
 );
 
 annotate service.Books with {
+    // Render the stored path as the cover image in the list and in display mode (same as app/book-shop); edit mode keeps the path input.
+    imageUrl @(UI.IsImageURL : true, Common.Text : title, Common.TextArrangement : #TextOnly);
     author @(
         Common.Text            : author.name,
         Common.TextArrangement : #TextOnly,
