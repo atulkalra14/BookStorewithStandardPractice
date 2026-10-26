@@ -137,7 +137,7 @@ export async function submitReturn (req) {
 
   const order = req.data.order_ID && await SELECT.one.from('bookstore.Orders').columns('ID', 'status', 'deliveredAt', 'customer_ID')
     .where({ ID: req.data.order_ID, 'customer.userId': req.user.id })
-  if (!order || order.status !== 'Placed' || !order.deliveredAt) return fail(req, 'ERR_RETURN_ORDER_NOT_ELIGIBLE', { target: 'order_ID' })
+  if (!order || !['Placed', 'Accepted'].includes(order.status) || !order.deliveredAt) return fail(req, 'ERR_RETURN_ORDER_NOT_ELIGIBLE', { target: 'order_ID' })
   if (!isWithinWindow(order.deliveredAt)) return fail(req, 'ERR_RETURN_WINDOW_EXPIRED', { args: [RETURN_WINDOW_DAYS], target: 'order_ID' })
 
   const ids = items.map(i => i.orderItem_ID).filter(Boolean)

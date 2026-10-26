@@ -2,7 +2,7 @@ using { bookstore } from '../db';
 
 @requires: 'Customer'
 service OrderService {
-  // Draft = cart. Activating a draft places the order (srv/lib/orders.js). Placed orders are read-only.
+  // Draft = cart. Activating a draft places the order (srv/lib/orders.js). Active orders (placed, accepted, rejected, cancelled) are read-only.
   @odata.draft.enabled
   @restrict: [
     { grant: ['READ', 'CREATE', 'UPDATE', 'DELETE'], to: 'Customer', where: 'customer.userId = $user' },
@@ -11,7 +11,7 @@ service OrderService {
   ]
   entity Orders as projection on bookstore.Orders {
     *,
-    // True only for a cart (a draft row, no status yet). Active rows are Placed or Cancelled and always immutable on the
+    // True only for a cart (a draft row, no status yet). Active rows are Placed, Accepted, Rejected or Cancelled and always immutable on the
     // server (srv/lib/orders.js), so the UI greys out Edit (draftEdit below) and Delete (app/orders/annotations.cds).
     case when status is null then true else false end as isEditable : Boolean @UI.Hidden
   } excluding { createdBy, modifiedBy }

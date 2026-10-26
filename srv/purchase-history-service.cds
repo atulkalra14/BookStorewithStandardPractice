@@ -1,6 +1,6 @@
 using { bookstore } from '../db';
 
-// Read-only list of the caller's own placed and cancelled orders. Not draft-enabled: carts (drafts) are never listed.
+// Read-only list of the caller's own orders (placed, accepted, rejected or cancelled), with the shop's reason. Not draft-enabled: carts (drafts) are never listed.
 @requires: 'Customer'
 service PurchaseHistoryService {
   // Invoice PDF streamed by the handler; the file name is set there (srv/lib/invoice.js).
@@ -16,6 +16,7 @@ service PurchaseHistoryService {
   ]
   entity Orders as projection on bookstore.Orders {
     key ID, orderNumber, placedAt, deliveredAt, status, totalAmount, currency,
+    decisionReason, decidedAt,
     shipToName, shipToStreet, shipToCity, shipToZip, shipToCountry.code as shipToCountry_code,
     items : redirected to Items,
     // Only here to restrict rows; exposing the association would auto-expose Customers.

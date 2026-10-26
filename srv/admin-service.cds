@@ -19,4 +19,35 @@ service AdminService {
   @readonly
   @restrict: [{ grant: 'READ', to: 'BookAdmin' }]
   entity Customers as projection on bookstore.Customers excluding { createdBy, modifiedBy };
+
+  // Order review: the shop decides on placed orders. Not draft-enabled: nothing is edited, the actions only change the
+  // status and set the reason shown to the customer (srv/lib/order-review.js). Carts live in OrderService drafts and never
+  // show here. Ship-to data is personal data, readable by every BookAdmin like Customers (accepted decision).
+  @readonly
+  @restrict: [
+    { grant: 'READ', to: 'BookAdmin' },
+    // No row rule: the handler reads the order through the READ rule above and every BookAdmin may decide on any order of the tenant.
+    { grant: ['accept', 'reject', 'cancel'], to: 'BookAdmin' }
+  ]
+  entity Orders as projection on bookstore.Orders excluding { createdBy, modifiedBy } actions {
+    // The reason parameter of all three actions is a plain LargeString: @mandatory, @Common.FieldControl: #Mandatory (CAP
+    // enforces it like @mandatory) and String(500) would make CAP reject the request with generic errors before the handler
+    // runs. srv/lib/order-review.js checks "required" and "at most 500" instead, with translated messages targeting `reason`.
+
+    // Placed -> Accepted. The reason is optional.
+    @Core.OperationAvailable: ( :in.status = 'Placed' )
+    action accept(in: $self, reason: LargeString @title: '{i18n>ReasonVisibleToCustomer}') returns Orders;
+
+    // Placed -> Rejected, stock goes back. Not after delivery: the customer holds the books (that is a return). The reason is mandatory.
+    @Core.OperationAvailable: ( :in.status = 'Placed' and :in.deliveredAt is null )
+    action reject(in: $self, reason: LargeString @title: '{i18n>ReasonVisibleToCustomer}') returns Orders;
+
+    // Placed or Accepted -> Cancelled, stock goes back. Not after delivery (that is a return). The reason is mandatory.
+    @Core.OperationAvailable: ( :in.status in ('Placed', 'Accepted') and :in.deliveredAt is null )
+    action cancel(in: $self, reason: LargeString @title: '{i18n>ReasonVisibleToCustomer}') returns Orders;
+  };
+
+  @readonly
+  @restrict: [{ grant: 'READ', to: 'BookAdmin' }]
+  entity OrderItems as projection on bookstore.OrderItems { *, book.title as bookTitle };
 }

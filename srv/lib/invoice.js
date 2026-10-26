@@ -81,7 +81,7 @@ export async function invoiceFor (srv, req) {
   const ID = req.params.at(-1)?.ID ?? req.params.at(-1)
   const order = await srv.run(SELECT.one.from(Orders).where({ ID }))
   if (!order) return req.reject(404)
-  if (order.status !== 'Placed') return req.reject(400, 'ERR_INVOICE_NOT_AVAILABLE')
+  if (!['Placed', 'Accepted'].includes(order.status)) return req.reject(400, 'ERR_INVOICE_NOT_AVAILABLE')
   const items = await srv.run(SELECT.from(Items).where({ order_ID: ID }).orderBy('bookTitle'))
   // Seller data is shop-wide, not customer data, and is not part of this service: read with the db service.
   const store = await SELECT.one.from('bookstore.StoreInfo').columns('name', 'address', 'phone').orderBy('createdAt')

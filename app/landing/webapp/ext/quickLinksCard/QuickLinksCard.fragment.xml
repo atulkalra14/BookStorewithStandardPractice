@@ -58,5 +58,15 @@
             press="links.open">
             <customData><core:CustomData key="target" value="../../com.bookstore.bookadminauthors/index.html" /></customData>
         </StandardListItem>
+        <StandardListItem
+            visible="{quickLinks>/isBookAdmin}"
+            icon="sap-icon://sales-order"
+            iconDensityAware="false"
+            title="{@i18n>adminOrdersTitle}"
+            description="{@i18n>adminOrdersSubtitle}"
+            type="Navigation"
+            press="links.open">
+            <customData><core:CustomData key="target" value="../../com.bookstore.bookadminorders/index.html" /></customData>
+        </StandardListItem>
     </List>
 </core:FragmentDefinition>
