@@ -1,15 +1,32 @@
 {
+  "welcomeFile": "/com.bookstore.landing/index.html",
   "routes": [
     {
-      "source": "^/-/cds/.*",
-      "destination": "mtx-api",
-      "authenticationType": "none"
+      "source": "^/?odata/(.*)$",
+      "target": "/odata/$1",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa",
+      "csrfProtection": true
     },
     {
-      "source": "^/(.*)$",
-      "target": "$1",
+      "source": "^/com\\.bookstore\\.[a-z]+/odata/(.*)$",
+      "target": "/odata/$1",
       "destination": "srv-api",
+      "authenticationType": "xsuaa",
       "csrfProtection": true
+    },
+    {
+      "source": "^/com\\.bookstore\\.([a-z]+)/(.*)$",
+      "target": "/combookstore$1/$2",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
     }
-  ]
+  ],
+  "authenticationMethod": "route"
 }

@@ -15,6 +15,7 @@ default-*.json
 
 # MTA
 mta_archives/
+app/*/dist/
 *_mta_build_tmp
 *.mtar
 

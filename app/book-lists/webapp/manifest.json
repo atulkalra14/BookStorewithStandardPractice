@@ -4,7 +4,7 @@
     "id": "com.bookstore.booklists",
     "type": "application",
     "i18n": "i18n/i18n.properties",
-    "applicationVersion": { "version": "0.0.1" },
+    "applicationVersion": { "version": "0.0.2" },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
     "dataSources": {
@@ -70,5 +70,9 @@
         "newArrivals": { "name": "NewArrivals", "id": "newArrivals" }
       }
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "BookStoreWithStandardPractices.service"
   }
 }

@@ -17,8 +17,8 @@ entity Books : cuid, managed {
   title    : String(111)  @mandatory @title: '{i18n>Title}';
   author   : Association to Authors @mandatory @title: '{i18n>Author}';
   descr    : localized String(1000) @title: '{i18n>Description}';
-  price    : Decimal(9,2) @assert.range: [0, 999999.99] @title: '{i18n>Price}';
-  stock    : Integer      @assert.range: [0, 999999] @title: '{i18n>Stock}';
+  price    : Decimal(9,2) @mandatory @assert.range: [0, 999999.99] @title: '{i18n>Price}';
+  stock    : Integer      @mandatory @assert.range: [0, 999999] @title: '{i18n>Stock}';
   genre    : Association to Genres @assert.target @title: '{i18n>Genre}';  // optional: existing books have none
   imageUrl : String(500)  @assert.format: '^/(?!/)[\w/.-]+$' @title: '{i18n>CoverImage}';  // path to a static cover image, e.g. /com.bookstore.landing/images/covers/cover-1.svg
 }

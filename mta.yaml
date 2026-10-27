@@ -1,9 +1,10 @@
 _schema-version: 3.3.0
 ID: BookStoreWithStandardPractices
 version: 1.0.0
-description: "A simple CAP project."
+description: "Online book shop with customer and admin Fiori apps"
 parameters:
   enable-parallel-deployments: true
+  deploy_mode: html5-repo
 build-parameters:
   before-all:
     - builder: custom
@@ -16,6 +17,7 @@ modules:
     path: gen/srv
     parameters:
       instances: 1
+      memory: 512M
       buildpack: nodejs_buildpack
     build-parameters:
       builder: npm-ci
@@ -26,47 +28,14 @@ modules:
     requires:
       - name: BookStoreWithStandardPractices-auth
       - name: BookStoreWithStandardPractices-db
+      - name: BookStoreWithStandardPractices-destination
 
-  - name: BookStoreWithStandardPractices-mtx
-    type: nodejs
-    path: gen/mtx/sidecar
-    requires:
-      - name: BookStoreWithStandardPractices-auth
-      - name: BookStoreWithStandardPractices-db
-      - name: BookStoreWithStandardPractices-registry
-      - name: app-api
-        properties:
-          SUBSCRIPTION_URL: ~{app-protocol}://\${tenant_subdomain}-~{app-uri}
-    build-parameters:
-      builder: npm-ci
-    parameters:
-      instances: 1
-      memory: 256M
-      disk-quota: 512M
-    hooks:
-      - name: upgrade-all
-        type: task
-        phases:
-          - blue-green.application.before-start.idle
-          - deploy.application.before-start
-        parameters:
-          name: upgrade
-          memory: 512M # increase as required
-          disk-quota: 768M # increase as required
-          command: cds-mtx upgrade '*'
-    provides:
-      - name: mtx-api
-        properties:
-          mtx-url: ${default-url}
   - name: BookStoreWithStandardPractices
     type: approuter.nodejs
     path: .deploy/app-router
     parameters:
-      keep-existing-routes: true
       disk-quota: 256M
       memory: 256M
-    properties:
-      TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
     requires:
       - name: srv-api
         group: destinations
@@ -74,17 +43,234 @@ modules:
           name: srv-api # must be used in xs-app.json as well
           url: ~{srv-url}
           forwardAuthToken: true
-      - name: mtx-api
-        group: destinations
-        properties:
-          name: mtx-api # must be used in xs-app.json as well
-          url: ~{mtx-url}
       - name: BookStoreWithStandardPractices-auth
+      - name: BookStoreWithStandardPractices-html5-runtime
+      - name: BookStoreWithStandardPractices-destination
     provides:
       - name: app-api
         properties:
           app-protocol: ${protocol}
           app-uri: ${default-uri}
+
+  - name: BookStoreWithStandardPractices-app-deployer
+    type: com.sap.application.content
+    path: gen
+    build-parameters:
+      build-result: app/
+      requires:
+        - name: BookStoreWithStandardPracticesbookadmin
+          artifacts:
+            - book-admin.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesbookadminauthors
+          artifacts:
+            - book-admin-authors.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesbookadminbooks
+          artifacts:
+            - book-admin-books.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesbookadminorders
+          artifacts:
+            - book-admin-orders.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesbookadminreturns
+          artifacts:
+            - book-admin-returns.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesbooklists
+          artifacts:
+            - book-lists.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesbookshop
+          artifacts:
+            - book-shop.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticeslanding
+          artifacts:
+            - landing.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesorders
+          artifacts:
+            - orders.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticespurchasehistory
+          artifacts:
+            - purchase-history.zip
+          target-path: app/
+        - name: BookStoreWithStandardPracticesreturns
+          artifacts:
+            - returns.zip
+          target-path: app/
+    requires:
+      - name: BookStoreWithStandardPractices-auth
+      - name: srv-api
+      - name: BookStoreWithStandardPractices-html5-repo-host
+        parameters:
+          content-target: true
+          config:
+            HTML5Runtime_enabled: true
+    parameters:
+      config:
+        destinations:
+          - Name: srv-api
+            URL: ~{srv-api/srv-url}
+            Authentication: NoAuthentication
+            Type: HTTP
+            ProxyType: Internet
+            ForwardAuthToken: true
+            DynamicDestination: true
+
+  - name: BookStoreWithStandardPracticesbookadmin
+    type: html5
+    path: app/book-admin
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesbookadminauthors
+    type: html5
+    path: app/book-admin-authors
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesbookadminbooks
+    type: html5
+    path: app/book-admin-books
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesbookadminorders
+    type: html5
+    path: app/book-admin-orders
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesbookadminreturns
+    type: html5
+    path: app/book-admin-returns
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesbooklists
+    type: html5
+    path: app/book-lists
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesbookshop
+    type: html5
+    path: app/book-shop
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticeslanding
+    type: html5
+    path: app/landing
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesorders
+    type: html5
+    path: app/orders
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticespurchasehistory
+    type: html5
+    path: app/purchase-history
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+  - name: BookStoreWithStandardPracticesreturns
+    type: html5
+    path: app/returns
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: BookStoreWithStandardPractices-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: BookStoreWithStandardPractices-db
+
+  - name: BookStoreWithStandardPractices-destinations
+    type: com.sap.application.content
+    requires:
+      - name: BookStoreWithStandardPractices-auth
+        parameters:
+          service-key:
+            name: BookStoreWithStandardPractices-auth-key
+      - name: BookStoreWithStandardPractices-html5-repo-host
+        parameters:
+          service-key:
+            name: BookStoreWithStandardPractices-html5-repo-host-key
+      - name: srv-api
+      - name: BookStoreWithStandardPractices-destination
+        parameters:
+          content-target: true
+    build-parameters:
+      no-source: true
+    parameters:
+      content:
+        instance:
+          existing_destinations_policy: update
+          destinations:
+            - Name: BookStoreWithStandardPractices-html5-repository
+              ServiceInstanceName: BookStoreWithStandardPractices-html5-repo-host
+              ServiceKeyName: BookStoreWithStandardPractices-html5-repo-host-key
+              sap.cloud.service: BookStoreWithStandardPractices.service
+            - Name: BookStoreWithStandardPractices-auth
+              Authentication: OAuth2UserTokenExchange
+              ServiceInstanceName: BookStoreWithStandardPractices-auth
+              ServiceKeyName: BookStoreWithStandardPractices-auth-key
+              sap.cloud.service: BookStoreWithStandardPractices.service
 
 resources:
   - name: BookStoreWithStandardPractices-auth
@@ -95,37 +281,50 @@ resources:
       path: ./xs-security.json
       config:
         xsappname: BookStoreWithStandardPractices-${org}-${space}
-        tenant-mode: shared
+        tenant-mode: dedicated
         oauth2-configuration:
           credential-types:
             - "binding-secret"
             - "x509"
           redirect-uris:
             - https://*~{app-api/app-uri}/**
+        role-collections:
+          - name: 'BookViewer (BookStoreWithStandardPractices ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.BookViewer'
+          - name: 'BookAdmin (BookStoreWithStandardPractices ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.BookAdmin'
+          - name: 'Customer (BookStoreWithStandardPractices ${org}-${space})'
+            description: 'Customers browse the catalog and manage their own orders and returns'
+            role-template-references:
+              - '$XSAPPNAME.Customer'
+              - '$XSAPPNAME.BookViewer'
     requires:
       - name: app-api
+  - name: BookStoreWithStandardPractices-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+  - name: BookStoreWithStandardPractices-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
   - name: BookStoreWithStandardPractices-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: BookStoreWithStandardPractices-destination
     type: org.cloudfoundry.managed-service
     parameters:
-      service: service-manager
-      service-plan: container
-  - name: BookStoreWithStandardPractices-registry
-    type: org.cloudfoundry.managed-service
-    requires:
-      - name: mtx-api
-    parameters:
-      service: saas-registry
-      service-plan: application
+      service: destination
+      service-plan: lite
       config:
-        xsappname: BookStoreWithStandardPractices-${org}-${space}
-        appName: BookStoreWithStandardPractices-${org}-${space}
-        displayName: BookStoreWithStandardPractices
-        description: A simple CAP project.
-        category: 'Category'
-        appUrls:
-          getDependencies: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/dependencies
-          onSubscription: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/tenant/{tenantId}
-          onSubscriptionAsync: true
-          onUnSubscriptionAsync: true
-          onUpdateDependenciesAsync: true
-          callbackTimeoutMillis: 300000 # Increase if your deployments are taking longer than that
+        HTML5Runtime_enabled: true
+    requires:
+      - name: srv-api

@@ -10,7 +10,7 @@ const load = f => Object.fromEntries(
 const en = load('messages.properties')
 const de = load('messages_de.properties')
 
-const KEYS = ['ERR_ORDER_EMPTY', 'ERR_ORDER_DUPLICATE_BOOK', 'ERR_ORDER_QUANTITY_INVALID', 'ERR_ORDER_INSUFFICIENT_STOCK',
+const KEYS = ['ERR_ORDER_EMPTY', 'ERR_ORDER_DUPLICATE_BOOK', 'ERR_ORDER_QUANTITY_INVALID', 'ERR_ORDER_INSUFFICIENT_STOCK', 'ERR_ORDER_BOOK_NO_PRICE',
   'ERR_ORDER_NOT_EDITABLE', 'ERR_ORDER_NOT_DELETABLE', 'ERR_ORDER_NOT_CANCELLABLE',
   'ERR_ORDER_COUNTRY_UNSUPPORTED', 'ERR_ORDER_ZIP_UNKNOWN', 'ERR_ORDER_CITY_UNSUPPORTED']
 
@@ -23,8 +23,8 @@ describe('order message keys', () => {
     const ph = s => (s || '').match(/\{\d+\}/g)?.sort() || []
     expect(ph(de[key])).toEqual(ph(en[key]))
   })
-  it('ERR_ORDER_INSUFFICIENT_STOCK takes the book title as {0}', () => {
-    expect(en.ERR_ORDER_INSUFFICIENT_STOCK).toContain('{0}')
-    expect(de.ERR_ORDER_INSUFFICIENT_STOCK).toContain('{0}')
+  it.each(['ERR_ORDER_INSUFFICIENT_STOCK', 'ERR_ORDER_BOOK_NO_PRICE'])('%s takes the book title as {0}', key => {
+    expect(en[key]).toContain('{0}')
+    expect(de[key]).toContain('{0}')
   })
 })
