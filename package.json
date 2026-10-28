@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@cap-js/hana": "^3",
+    "@cap-js/mcp": "^1.5.0",
     "@sap/cds": "^10",
     "@sap/cds-common-content": "^3.2.0",
     "@sap/cds-mtxs": "^4",
@@ -49,6 +50,15 @@
   },
   "private": true,
   "cds": {
+    "mcp": {
+      "per_action_tool": true,
+      "autowire": false
+    },
+    "log": {
+      "levels": {
+        "mcp": "warn"
+      }
+    },
     "requires": {
       "auth": {
         "[development]": {
