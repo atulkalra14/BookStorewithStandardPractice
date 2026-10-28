@@ -6,3 +6,4 @@ using from './landing-service';
 using from './order-service';
 using from './purchase-history-service';
 using from './return-service';
+using from './book-admin-mcp-service';
